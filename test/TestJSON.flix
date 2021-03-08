@@ -44,13 +44,15 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
     /////////////////////////////////////////////////////////////////////////////
     // lex                                                                     //
     /////////////////////////////////////////////////////////////////////////////
-    /// @test 
-    /// def testJSON02(): Bool & Impure = 
-    ///     let testCurly = "{}";
-    ///     let tokens = lex(testCurly);
-    ///     let expectedtokens = "{"::"}"::Nil;
-    ///     tokens == expectedtokens
+    @test 
+    def testJSON02(): Bool & Impure = 
+        let testCurly = "{ ";
+        let tokens : List[String] = lex(testCurly, Nil);
+        let expectedtokens : List[String] = "{" :: Nil;
+    
+        tokens == expectedtokens
         
+    
         
 
    
