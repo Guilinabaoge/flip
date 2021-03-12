@@ -54,56 +54,37 @@ namespace Pkger {
             case Some(y) => let dir = newFile(y);
                             let File(javaFile) = dir;
                             let child = javaFile.listFiles();
-                            let childLength = Array.length(child);
-                            let childWrap = Array.map(File,child);
-                            let flixFiles = Nil;
-                            getFlixForeachHelper(getFlixFile,childWrap,None,flixFiles,childLength,0);
-                            flixFiles |> println;
-                            Ok([])
+                            let childList = Array.toList(child);
+                            let flixFiles = getFlixPathes(childList);
+                            let flixArray = List.toArray(flixFiles);
+                            Ok(flixArray)
 
         }
     
-     def getFlixForeachHelper(f: (File,String,List[String]) ~> Result[Unit,IOError], a: Array[File], parentName: Option[String], flixFiles: List[String], len: Int32, i: Int32): Result[Unit,IOError] & Impure =
-        use Result.flatMap;
-        if (i >= len)
-            //let flixfiles = List.toArray(flixFiles);
-            
-            Ok(())
-
-        else {
-            let* fileName = noJavaFileGetname(a[i]); 
-            let concateName = match parentName {
-                case None => fileName
-                case Some(y) => y + "/" + fileName
-            }; 
-            f(a[i],concateName,flixFiles);
-            getFlixForeachHelper(f,a, parentName,flixFiles ,len, i + 1)
-            
-        }
+    pub def getFlixPathes(files: List[##java.io.File]): List[String] & Impure =
+        
+        /// import java.io.File.listFiles();
+        
+        let pathes = List.map(flixCheck,files);
+        pathes |> println;
+        pathes
     
-    pub def getFlixFile(f: File, fileName: String, flixFiles: List[String]): Result[Unit,IOError] & Impure = 
-        use Result.flatMap;
-        import java.io.File.isDirectory();
-        import java.io.File.listFiles();
+    pub def flixCheck(file: ##java.io.File): String & Impure =
         import java.io.File.getAbsolutePath();
-        let File(javaFile) = f; 
-        if (javaFile.isDirectory() and fileName != "target") {
-            let children = javaFile.listFiles();
-            let childrenWrap = Array.map(File,children);
-            let childdrenLength = Array.length(childrenWrap);
-            getFlixForeachHelper(getFlixFile,childrenWrap,None,flixFiles,childdrenLength,0)
-        } else {
-            if (String.endsWith(fileName,".flix")) {
-                flixFiles ::: (javaFile.getAbsolutePath()::Nil);
-                javaFile.getAbsolutePath() |> println;
-                Ok(())
-            }
-            else {
-                Ok(())
-            }
-            
-
+        import java.io.File.getName();
+        if (String.endsWith(file.getName(),".flix")) {
+            file.getAbsolutePath()
         }
+        else
+        {
+            "TODO fix this shit" 
+        }
+        
+        
+        
+    
+    
+        
     
     pub def packFlix(filename: Option[String]): Result[Bool,IOError] & Impure = 
         use Result.flatMap;
