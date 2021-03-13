@@ -79,12 +79,6 @@ namespace Pkger {
         {
             "TODO fix this shit" 
         }
-        
-        
-        
-    
-    
-        
     
     pub def packFlix(filename: Option[String]): Result[Bool,IOError] & Impure = 
         use Result.flatMap;

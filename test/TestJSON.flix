@@ -33,23 +33,30 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
     /////////////////////////////////////////////////////////////////////////////
     // prettyprint                                                             //
     /////////////////////////////////////////////////////////////////////////////
-    @test
-    def testJSON01(): Bool & Impure = 
-        let a = examplePackage1();
-        stringifyPackageInfo(a) |> println;
-        let b = examplePackage2();
-        stringifyPackageInfo(b) |> println;
-        true
+    /// @test
+    /// def testJSON01(): Bool & Impure = 
+    ///     let a = examplePackage1();
+    ///     stringifyPackageInfo(a) |> println;
+    ///     let b = examplePackage2();
+    ///     stringifyPackageInfo(b) |> println;
+    ///     true
     
     /////////////////////////////////////////////////////////////////////////////
-    // lex                                                                     //
+    // test                                                                     //
     /////////////////////////////////////////////////////////////////////////////
     @test 
     def testJSON02(): Bool & Impure = 
-        let testCurly = "{ ";
+        let testCurly = "{";
         let tokens : List[String] = lex(testCurly, Nil);
         let expectedtokens : List[String] = "{" :: Nil;
-    
+        tokens == expectedtokens
+
+    @test 
+    def testJSON03(): Bool & Impure = 
+        let quote = Char.toString('"');
+        let testCurly = "{${quote}name${quote}:${quote}MyPackageNameTwo${quote}}";
+        let tokens : List[String] = lex(testCurly, Nil);
+        let expectedtokens : List[String] = "{" :: "name" :: ":" :: "MyPackageNameTwo"::"}":: Nil; 
         tokens == expectedtokens
         
     

@@ -26,11 +26,6 @@ use Pkger/Dependency.PackageDependency;
 
 namespace Pkger{
     namespace JSON{
-        /// pub enum JSON_WHITESPACE{
-        ///     case " "
-        /// }
-
-
         //
         // Parse JSON format string into a PackageInfo
         //
@@ -46,19 +41,52 @@ namespace Pkger{
         pub def lex(s: String, tokens: List[String]): List[String] & Impure= 
             let stringList = String.toList(s);
             match stringList {
-                case Nil => tokens 
+                case Nil => List.reverse(tokens) 
                 case n :: rest =>
-                    match Char.toString(n) {
-                        case " " => let restStringList = List.map(Char.toString,rest);
+                    match n {
+                        case '"' => let (string, list) = lex_string(rest,"");
+                                    let tokens = string :: tokens;
+                                    let newstring = String.flatten(list);
+                                    lex(newstring,tokens)
+                        case ' ' => let restStringList = List.map(Char.toString,rest);
                                     let newstring = String.flatten(restStringList);
                                     lex(newstring,tokens)
-                        case "{" => let restStringList = List.map(Char.toString,rest);
+                        case '{' => let restStringList = List.map(Char.toString,rest);
                                     let newstring = String.flatten(restStringList);
-                                    let tokens = tokens ::: ("{"::Nil);
+                                    let tokens = "{" :: tokens;
                                     lex(newstring,tokens)
-                        case _ => tokens
+                        case ':' => let restStringList = List.map(Char.toString,rest);
+                                    let newstring = String.flatten(restStringList);
+                                    let tokens = ":" :: tokens;
+                                    lex(newstring,tokens)
+                        case '}' => let restStringList = List.map(Char.toString,rest);
+                                    let newstring = String.flatten(restStringList);
+                                    let tokens = "}" :: tokens;
+                                    lex(newstring,tokens)
+                        case _ => let restStringList = List.map(Char.toString,rest);
+                                    let newstring = String.flatten(restStringList);
+                                    lex(newstring,tokens)
                     }
             }
+        
+        pub def lex_string(list: List[Char], key: String): (String, List[String]) = 
+            match list{
+                case Nil => let stringlist = List.map(Char.toString,list); 
+                            (key,stringlist)
+                case n :: rest => 
+                        match n {
+                            case '"' => let stringlist = List.map(Char.toString,rest);
+                                        let reverse = String.reverse(key);  
+                                            (reverse,stringlist) 
+                            case _ => //let stringlist = List.map(Char.toString,rest);  
+                                            let stringnew = Char.toString(n) + key;  
+                                            lex_string(rest,stringnew)
+                        }
+            }
+          
+
+
+
                 
         pub def stringifyPackageInfo(p: PackageInfo): String = 
             let PackageInfo(package1) = p;
