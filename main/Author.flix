@@ -18,12 +18,14 @@
 
 namespace Pkger{
     namespace Author{
-        /// instance Eq[Author] {
-        ///     def eq(x: Author, y: Author): Bool = 
-        ///         let Author(a1) = x;
-        ///         let Author(a2) = y;
-        ///         a1.name == a2.name
-        /// }   
+        instance Eq[Author] {
+            def eq(x: Author, y: Author): Bool = 
+                let Author(a1) = x;
+                let Author(a2) = y;
+                a1.name == a2.name
+            
+            pub def neq(x:Author, y:Author) : Bool = false 
+        }   
 
         instance ToString[Author] {
             def toString(x: Author): String = 

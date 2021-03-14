@@ -30,7 +30,7 @@ namespace Pkger{
         //
         // Parse JSON format string into a PackageInfo
         //
-        pub def parse(tokens: List[String]): {name: String} & Impure= 
+        pub def parse(tokens: List[String]): PackageInfo & Impure= 
             match tokens {
                 case Nil => ???//"empty token should return error" |> println; {name = "MyPackageNameOne"} 
                 case n :: rest => 
@@ -41,8 +41,13 @@ namespace Pkger{
             }
 
         
-        def parse_object(tokens: List[String]): {name: String} & Impure= 
-            let json_object = {name= "Nil"};
+        def parse_object(tokens: List[String]): PackageInfo & Impure= 
+            let json_object = PackageInfo({name = "MyPackageNameOne",
+                version = SemVer(0,0,0),
+                authors = Author({name = "Hi", email = None, website = None}) :: Nil,
+                edition = SemVer(0,0,0),
+                dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
+                url = "Nil"});
             match tokens {
                 case Nil => ???
                 case n :: rest =>
@@ -58,7 +63,7 @@ namespace Pkger{
                                                     ??? // illegal JSON
                                                 }
                                         }        
-                        case _ => { name = "${n}"}
+                        case _ => json_object
                     }
             }
             

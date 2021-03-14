@@ -17,6 +17,15 @@
 use Pkger/SemVer.SemVer;
 namespace Pkger{
     namespace Dependency {
+        instance Eq[PackageDependency]{
+            pub def eq(x:PackageDependency,y: PackageDependency): Bool = {
+                let PackageDependency(p1) = x;
+                let PackageDependency(p2) = y;
+                p1.name == p2.name and 
+                p1.version == p2.version
+            }
+            pub def neq(x:PackageDependency,y: PackageDependency): Bool = false
+        }
         pub enum PackageDependency {
             case PackageDependency({name: String, version : SemVer})  
             //case FileDependency(String, String)  

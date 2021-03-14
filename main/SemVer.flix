@@ -18,6 +18,17 @@
  ///TODO pre-release version
  namespace Pkger{
       namespace SemVer{
+        instance Eq[SemVer]{
+            pub def eq(x: SemVer, y: SemVer): Bool = {
+                let SemVer(a1,b1,c1) = x;
+                let SemVer(a2,b2,c2) = y;
+                a1 == a2 and 
+                b1 == b2 and 
+                c1 == c2
+            }
+            pub def neq(x:SemVer,y: SemVer): Bool = false
+        }
+
         pub enum SemVer{
             case SemVer(Int32, Int32, Int32)
         }

@@ -21,6 +21,20 @@ use Pkger/Dependency.PackageDependency;
 
 namespace Pkger{
     namespace PackageInfo{
+        instance Eq[PackageInfo] {
+            pub def eq(x: PackageInfo, y: PackageInfo): Bool = 
+                let PackageInfo(p1) = x;
+                let PackageInfo(p2) = y;
+                p1.name == p2.name and 
+                p1.url == p2.url and 
+                p1.version == p2.version and 
+                p1.authors == p2.authors and 
+                p1.edition == p2.edition and 
+                p1.dependencies == p2.dependencies 
+
+            pub def neq(x:PackageInfo, y:PackageInfo) : Bool = false 
+        }   
+
  // Any field that's only require by the registry is ignore for now
         pub enum PackageInfo{
             case PackageInfo({

@@ -40,7 +40,7 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
 
 
 
-    def checkRecordEqual1(packageInfo: {name: String},expectedpinfo: {name: String}): Bool = 
+    def _checkRecordEqual1(packageInfo: {name: String},expectedpinfo: {name: String}): Bool = 
         packageInfo.name == expectedpinfo.name
 
     /// def printRecord1(packageInfo: {name: String}): Unit & Impure = 
@@ -109,8 +109,15 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
         let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote}}";
         let tokens = lex(json,Nil);
         let packageInfo = parse(tokens);
-        let expectedpinfo = {name = "MyPackageNameOne"};
-        checkRecordEqual1(packageInfo,expectedpinfo)
+        let expectedpinfo = PackageInfo({
+                name = "MyPackageNameOne",
+                version = SemVer(0,0,0), 
+                authors = Author({name = "Hi", email = None, website = None}) :: Nil,
+                edition = SemVer(0,0,0),
+                dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
+                url = "Nil"});
+        packageInfo == expectedpinfo
+        //checkRecordEqual1(packageInfo,expectedpinfo)
     
     /// @test 
     /// def testParse2(): Bool & Impure = 
