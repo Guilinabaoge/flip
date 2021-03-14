@@ -15,8 +15,24 @@
  */
 
 
+
 namespace Pkger{
     namespace Author{
+        /// instance Eq[Author] {
+        ///     def eq(x: Author, y: Author): Bool = 
+        ///         let Author(a1) = x;
+        ///         let Author(a2) = y;
+        ///         a1.name == a2.name
+        /// }   
+
+        instance ToString[Author] {
+            def toString(x: Author): String = 
+                let Author(a1) = x;
+                let string = "name: #{a1.name}  email: #{a1.email} website: #{a1.website}";
+                string
+        } 
+
+
         pub enum Author{
             case Author({name: String, email: Option[String], website: Option[String]})
         }

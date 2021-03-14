@@ -26,24 +26,55 @@ use Pkger/Dependency.PackageDependency;
 
 namespace Pkger{
     namespace JSON{
+
         //
         // Parse JSON format string into a PackageInfo
         //
-        pub def parse(_json: String): PackageInfo = 
-            PackageInfo({
-            name = "MyPackageNameTwo",
-            version = SemVer(2,0,0), 
-            authors = Author({name = "Jens", email = None, website = None}) :: Nil,
-            edition = SemVer(0,14,6),
-            dependencies = Nil,
-            url = "Nil"})
+        pub def parse(tokens: List[String]): {name: String} & Impure= 
+            match tokens {
+                case Nil => ???//"empty token should return error" |> println; {name = "MyPackageNameOne"} 
+                case n :: rest => 
+                    match n {
+                        case "{" => parse_object(rest) 
+                        case _  => parse_object(tokens)
+                     }
+            }
+
         
+        def parse_object(tokens: List[String]): {name: String} & Impure= 
+            let json_object = {name= "Nil"};
+            match tokens {
+                case Nil => ???
+                case n :: rest =>
+                    match n {
+                        case "}" => json_object
+                        case "name" =>  match rest {
+                                            case Nil => ??? // illegal JSON
+                                            case n :: rest => 
+                                                if (n == ":"){
+                                                    parse(rest)
+                                                }
+                                                else {
+                                                    ??? // illegal JSON
+                                                }
+                                        }        
+                        case _ => { name = "${n}"}
+                    }
+            }
+            
+            
+            
+
+        
+
+        //TODO make it support monadic style 
         pub def lex(s: String, tokens: List[String]): List[String] & Impure= 
             let stringList = String.toList(s);
             match stringList {
-                case Nil => List.reverse(tokens) 
+                case Nil => List.reverse(tokens)//Ok(List.reverse(tokens)) 
                 case n :: rest =>
                     match n {
+                        // TODO figure out how to refactor JSON_SYNTAX
                         case '"' => let (string, list) = lex_string(rest,"");
                                     let tokens = string :: tokens;
                                     let newstring = String.flatten(list);
@@ -63,13 +94,23 @@ namespace Pkger{
                                     let newstring = String.flatten(restStringList);
                                     let tokens = "}" :: tokens;
                                     lex(newstring,tokens)
-                        case _ => let restStringList = List.map(Char.toString,rest);
+                        case '[' => let restStringList = List.map(Char.toString,rest);
                                     let newstring = String.flatten(restStringList);
+                                    let tokens = "[" :: tokens;
                                     lex(newstring,tokens)
+                        case ']' => let restStringList = List.map(Char.toString,rest);
+                                    let newstring = String.flatten(restStringList);
+                                    let tokens = "]" :: tokens;
+                                    lex(newstring,tokens)
+                        case ',' => let restStringList = List.map(Char.toString,rest);
+                                    let newstring = String.flatten(restStringList);
+                                    let tokens = "," :: tokens;
+                                    lex(newstring,tokens)
+                        case _ => List.reverse(tokens)//"illegal JSON" |> println; Nil
                     }
             }
         
-        pub def lex_string(list: List[Char], key: String): (String, List[String]) = 
+        pub def lex_string(list: List[Char], key: String): (String, List[String]) & Impure= 
             match list{
                 case Nil => let stringlist = List.map(Char.toString,list); 
                             (key,stringlist)
