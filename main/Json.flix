@@ -27,43 +27,148 @@ use Pkger/Dependency.PackageDependency;
 namespace Pkger{
     namespace JSON{
 
+        pub def parseWrapper(tokens: List[String]): PackageInfo & Impure =
+            let initPinfo = PackageInfo({name = "",
+                                        version = SemVer(0,0,0),
+                                        authors = Author({name = "", email = None, website = None}) :: Nil,
+                                        edition = SemVer(0,0,0),
+                                        dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
+                                        url = "Nil"});
+            parse(tokens,initPinfo)
         //
         // Parse JSON format string into a PackageInfo
         //
-        pub def parse(tokens: List[String]): PackageInfo & Impure= 
+        pub def parse(tokens: List[String],json_object: PackageInfo): PackageInfo & Impure= 
             match tokens {
                 case Nil => ???//"empty token should return error" |> println; {name = "MyPackageNameOne"} 
                 case n :: rest => 
                     match n {
-                        case "{" => parse_object(rest) 
-                        case _  => parse_object(tokens)
+                        case "{" => parse_object(rest,json_object) 
+                       // case "[" => parse_array(rest,json_object)
+                        case _  => parse_object(tokens,json_object)
                      }
             }
 
+        def parse_array_authors(tokens: List[String],authorlist:List[Author]): (List[Author],List[String]) = 
+        let alist = Author({name = "Peter", email = None, website = None})::Nil;
+        use Option.flatMap;
+            /// let authorlist = match alist {
+            ///     case None => Author({name = "", email = None, website = None})::Nil
+            ///     case Some(y) => y
+            /// };
+            match tokens {
+                case Nil => ??? //illegal JSON
+                case n :: rest => 
+                    match n {
+                        case "}" => parse_array_authors(rest,alist)
+                        case "{" => parse_array_authors(rest,alist)
+                        case "name" => match rest {
+                                            case Nil => ??? // illegal JSON
+                                            case n2 :: rest2 => if (n2 == ":"){
+                                                                    match rest2{
+                                                                        case Nil => ??? // illegal JSON
+                                                                        case n3 :: rest3 => match List.head(alist){
+                                                                            case None => ???// illegal JSON 
+                                                                            case Some(y) => let Author(x) = y;
+                                                                                            let newauthor = Author({name = "${n3}" | x});
+                                                                                            let newalist = newauthor :: Nil;
+                                                                                            parse_array_authors(rest3,newalist)
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    ???
+                                                                }}
+                        case "email" => match rest {
+                                            case Nil => ??? // illegal JSON
+                                            case n2 :: rest2 => if (n2 == ":"){
+                                                                    match rest2{
+                                                                        case Nil => ??? // illegal JSON
+                                                                        case n3 :: rest3 => match List.head(alist){
+                                                                            case None => ???// illegal JSON 
+                                                                            case Some(y) => let Author(x) = y;
+                                                                                            let newauthor = Author({email = None | x});
+                                                                                            let newalist = newauthor :: Nil;
+                                                                                            parse_array_authors(rest3,newalist)
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    ???
+                                                                }}
+                        case "website" => match rest {
+                                            case Nil => ??? // illegal JSON
+                                            case n2 :: rest2 => if (n2 == ":"){
+                                                                    match rest2{
+                                                                        case Nil => ??? // illegal JSON
+                                                                        case n3 :: rest3 => match List.head(alist){
+                                                                            case None => ???// illegal JSON 
+                                                                            case Some(y) => let Author(x) = y;
+                                                                                            let newauthor = Author({website = None | x});
+                                                                                            let newalist = newauthor :: Nil;
+                                                                                            parse_array_authors(rest3,newalist)
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    ???
+                                                                }}
+                        case "]" =>   (alist,tokens)
+                        case _ => (alist,tokens)
+                    }
+                
+            }
+            
+
+
         
-        def parse_object(tokens: List[String]): PackageInfo & Impure= 
-            let json_object = PackageInfo({name = "MyPackageNameOne",
-                version = SemVer(0,0,0),
-                authors = Author({name = "Hi", email = None, website = None}) :: Nil,
-                edition = SemVer(0,0,0),
-                dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
-                url = "Nil"});
+        def parse_object(tokens: List[String],json_object: PackageInfo): PackageInfo & Impure= 
+        
             match tokens {
                 case Nil => ???
                 case n :: rest =>
                     match n {
                         case "}" => json_object
+                        case "," => json_object
                         case "name" =>  match rest {
                                             case Nil => ??? // illegal JSON
                                             case n :: rest => 
                                                 if (n == ":"){
-                                                    parse(rest)
+                                                    match rest {
+                                                        case Nil => ??? //illegal JSON
+                                                        case n2 :: rest2  =>
+                                                            let PackageInfo(x) = json_object; 
+                                                            let newpinfo = PackageInfo({name = "${n2}" | x});
+                                                            parse_object(rest2,newpinfo)
+                                                    }
                                                 }
                                                 else {
                                                     ??? // illegal JSON
                                                 }
-                                        }        
-                        case _ => json_object
+                                        }     
+                        case "authors" =>   match rest {
+                                            case Nil => ??? // illegal JSON
+                                            case n :: rest => 
+                                                if (n == ":"){
+                                                    match rest {
+                                                        case Nil => ??? //illegal JSON
+                                                        case n2 :: rest2  =>
+                                                            if (n2 == "[") {
+                                                                let (getlist,remaintokens) = parse_array_authors(rest2,Nil);
+                                                                getlist |> println;
+                                                                "Hi" |> println;
+                                                                let PackageInfo(x) = json_object; 
+                                                                let newpinfo = PackageInfo({authors = getlist | x});
+                                                                parse_object(remaintokens,newpinfo)
+                                                            }
+                                                            else {
+                                                                ??? /// illegal JSON authors must follow with an list 
+                                                            }
+                                                                
+                                                    }
+                                                }
+                                                else {
+                                                    ??? // illegal JSON
+                                                }
+                                        }  
+                        case _ => ???
                     }
             }
             

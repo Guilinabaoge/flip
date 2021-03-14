@@ -26,7 +26,7 @@ use Pkger/Author.Author;
 use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
 use Pkger/Dependency.PackageDependency;
-use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPackageInfo,lex,parse};
+use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPackageInfo,lex,parseWrapper};
 
 
 //TODO figure out how to impl record instance 
@@ -104,11 +104,11 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
         tokens == expectedtokens 
 
     @test 
-    def testParse(): Bool & Impure = 
+    def testParse01(): Bool & Impure = 
         let quote = Char.toString('"');
         let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote}}";
         let tokens = lex(json,Nil);
-        let packageInfo = parse(tokens);
+        let packageInfo = parseWrapper(tokens);
         let expectedpinfo = PackageInfo({
                 name = "MyPackageNameOne",
                 version = SemVer(0,0,0), 
@@ -117,19 +117,28 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
                 dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
                 url = "Nil"});
         packageInfo == expectedpinfo
-        //checkRecordEqual1(packageInfo,expectedpinfo)
+
     
-    /// @test 
-    /// def testParse2(): Bool & Impure = 
-    ///     let quote = Char.toString('"');
-    ///     let json = "{${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},${quote}email${quote}:${quote}None${quote},${quote}website${quote}:${quote}None${quote}}]}";
-    ///     let tokens = lex(json,Nil);
-    ///     let packageInfo = parse(tokens);
-    ///     let expectedpinfo = {authors = [{name = "Peter", email = None, website = None}:: Nil]};
-    ///     /// printRecord2(packageInfo);
-    ///     /// printRecord2(expectedpinfo);
-    ///     /// checkRecordEqual2(packageInfo,expectedpinfo)
-    ///     ///packageInfo == expectedpinfo
+    @test 
+    def testParse02(): Bool & Impure = 
+        let quote = Char.toString('"');
+        let json = "{${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},${quote}email${quote}:${quote}None${quote},${quote}website${quote}:${quote}None${quote}}]}";
+        let tokens = lex(json,Nil);
+        tokens |> println;
+        let packageInfo = parseWrapper(tokens);
+        let expectedpinfo = PackageInfo({name = "",
+                                        version = SemVer(0,0,0),
+                                        authors = Author({name = "Peter", email = None, website = None}) :: Nil,
+                                        edition = SemVer(0,0,0),
+                                        dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
+                                        url = "Nil"});
+       
+        packageInfo |> println;
+        expectedpinfo |> println;
+        expectedpinfo == packageInfo
+        
+        
+      
 
     
 

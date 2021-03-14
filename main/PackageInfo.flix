@@ -18,6 +18,7 @@
 use Pkger/SemVer.SemVer;
 use Pkger/Author.Author;
 use Pkger/Dependency.PackageDependency;
+use Pkger/JSON.{stringifyAuthors,stringifyDependency,stringifySemver};
 
 namespace Pkger{
     namespace PackageInfo{
@@ -34,6 +35,25 @@ namespace Pkger{
 
             pub def neq(x:PackageInfo, y:PackageInfo) : Bool = false 
         }   
+
+        instance ToString[PackageInfo] {
+            def toString(x: PackageInfo): String = 
+                let PackageInfo(package1) = x;
+                let name = package1.name;
+                let version = stringifySemver(package1.version);
+                let authors = stringifyAuthors(package1.authors);
+                let edition = stringifySemver(package1.edition);
+                let dependencies = stringifyDependency(package1.dependencies);
+                let url = package1.url;
+                
+                let packageInfoString = Char.toString('"')+"name"+Char.toString('"') + ":" + Char.toString('"')+name+Char.toString('"') + "," + String.lineSeparator()+
+                                        Char.toString('"')+"version"+Char.toString('"') + ":" + Char.toString('"')+version+Char.toString('"') + "," +String.lineSeparator()+
+                                        Char.toString('"')+"authors"+Char.toString('"') + ":" + "["+authors+"]" + "," +String.lineSeparator()+
+                                        Char.toString('"')+"edition"+Char.toString('"') + ":" + Char.toString('"')+edition+Char.toString('"') + "," +String.lineSeparator()+
+                                        Char.toString('"')+"dependencies"+Char.toString('"') + ":" + "["+dependencies+"]" + "," +String.lineSeparator()+
+                                        Char.toString('"')+"url"+Char.toString('"') + ":" + Char.toString('"')+url+Char.toString('"');
+                packageInfoString
+        } 
 
  // Any field that's only require by the registry is ignore for now
         pub enum PackageInfo{
