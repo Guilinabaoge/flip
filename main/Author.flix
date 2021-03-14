@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-
-
 namespace Pkger{
     namespace Author{
         instance Eq[Author] {
             def eq(x: Author, y: Author): Bool = 
                 let Author(a1) = x;
                 let Author(a2) = y;
-                a1.name == a2.name
+                a1.name == a2.name and 
+                a1.email == a2.email and 
+                a1.website == a2.website
             
             pub def neq(x:Author, y:Author) : Bool = false 
         }   

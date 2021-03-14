@@ -27,39 +27,41 @@ use Pkger/Dependency.PackageDependency;
 namespace Pkger{
     namespace JSON{
 
+        //
+        // Give parse an initial PackageInfo 
+        //
         pub def parseWrapper(tokens: List[String]): PackageInfo & Impure =
             let initPinfo = PackageInfo({name = "",
                                         version = SemVer(0,0,0),
                                         authors = Author({name = "", email = None, website = None}) :: Nil,
                                         edition = SemVer(0,0,0),
-                                        dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
+                                        dependencies = PackageDependency({name = "",version = SemVer(0,0,0)}) :: Nil,
                                         url = "Nil"});
             parse(tokens,initPinfo)
+
         //
         // Parse JSON format string into a PackageInfo
         //
         pub def parse(tokens: List[String],json_object: PackageInfo): PackageInfo & Impure= 
             match tokens {
-                case Nil => ???//"empty token should return error" |> println; {name = "MyPackageNameOne"} 
+                case Nil => ???//"empty token should return error" 
                 case n :: rest => 
                     match n {
                         case "{" => parse_object(rest,json_object) 
-                       // case "[" => parse_array(rest,json_object)
                         case _  => parse_object(tokens,json_object)
                      }
             }
 
-        def parse_array_authors(tokens: List[String],authorlist:List[Author]): (List[Author],List[String]) = 
-        let alist = Author({name = "Peter", email = None, website = None})::Nil;
-        use Option.flatMap;
-            /// let authorlist = match alist {
-            ///     case None => Author({name = "", email = None, website = None})::Nil
-            ///     case Some(y) => y
-            /// };
+        //TODO function must specifi the List type, is making two functions to parse List[Author] List[Dependency] the right thing to do?
+        def parse_array_authors(tokens: List[String],authorlist:List[Author]): (List[Author],List[String]) & Impure= 
+            let alist = Author({name = "Peter", email = None, website = None})::Nil;
+            use Option.flatMap;
             match tokens {
                 case Nil => ??? //illegal JSON
                 case n :: rest => 
                     match n {
+                        //TODO solve code duplication 
+                        case "," => parse_array_authors(rest,alist)
                         case "}" => parse_array_authors(rest,alist)
                         case "{" => parse_array_authors(rest,alist)
                         case "name" => match rest {
@@ -82,8 +84,8 @@ namespace Pkger{
                                             case Nil => ??? // illegal JSON
                                             case n2 :: rest2 => if (n2 == ":"){
                                                                     match rest2{
-                                                                        case Nil => ??? // illegal JSON
-                                                                        case n3 :: rest3 => match List.head(alist){
+                                                                        case Nil => ??? // illegal JSON 
+                                                                        case n3 :: rest3 => match List.head(alist){ //TODO let* for Option? 
                                                                             case None => ???// illegal JSON 
                                                                             case Some(y) => let Author(x) = y;
                                                                                             let newauthor = Author({email = None | x});
@@ -110,23 +112,39 @@ namespace Pkger{
                                                                 } else {
                                                                     ???
                                                                 }}
-                        case "]" =>   (alist,tokens)
+                        case "]" =>  (alist,rest)
                         case _ => (alist,tokens)
                     }
                 
             }
+
+        def parse_semver(_token: String): SemVer = SemVer(1,2,3)   
             
-
-
-        
         def parse_object(tokens: List[String],json_object: PackageInfo): PackageInfo & Impure= 
-        
             match tokens {
                 case Nil => ???
                 case n :: rest =>
                     match n {
                         case "}" => json_object
-                        case "," => json_object
+                        case "," => parse_object(rest,json_object)
+                        case "version" => match rest {
+                                            case Nil => ??? // illegal JSON
+                                            case n :: rest => 
+                                                if (n == ":"){
+                                                    match rest {
+                                                        case Nil => ??? //illegal JSON
+                                                        case n2 :: rest2  =>
+                                                            let getsemver = parse_semver(n2);
+                                                            let PackageInfo(x) = json_object; 
+                                                            let newpinfo = PackageInfo({version = getsemver | x});
+                                                            parse_object(rest2,newpinfo)         
+                                                    }
+                                                }
+                                                else {
+                                                    ??? // illegal JSON
+                                                }
+                                            } 
+
                         case "name" =>  match rest {
                                             case Nil => ??? // illegal JSON
                                             case n :: rest => 
@@ -152,8 +170,6 @@ namespace Pkger{
                                                         case n2 :: rest2  =>
                                                             if (n2 == "[") {
                                                                 let (getlist,remaintokens) = parse_array_authors(rest2,Nil);
-                                                                getlist |> println;
-                                                                "Hi" |> println;
                                                                 let PackageInfo(x) = json_object; 
                                                                 let newpinfo = PackageInfo({authors = getlist | x});
                                                                 parse_object(remaintokens,newpinfo)
@@ -167,16 +183,12 @@ namespace Pkger{
                                                 else {
                                                     ??? // illegal JSON
                                                 }
-                                        }  
+                                            }  
                         case _ => ???
                     }
             }
             
             
-            
-
-        
-
         //TODO make it support monadic style 
         pub def lex(s: String, tokens: List[String]): List[String] & Impure= 
             let stringList = String.toList(s);
@@ -184,7 +196,7 @@ namespace Pkger{
                 case Nil => List.reverse(tokens)//Ok(List.reverse(tokens)) 
                 case n :: rest =>
                     match n {
-                        // TODO figure out how to refactor JSON_SYNTAX
+                        // TODO figure out how to refactor JSON_SYNTAX too much code duplications case '"' or ' ' => ?
                         case '"' => let (string, list) = lex_string(rest,"");
                                     let tokens = string :: tokens;
                                     let newstring = String.flatten(list);
@@ -216,7 +228,7 @@ namespace Pkger{
                                     let newstring = String.flatten(restStringList);
                                     let tokens = "," :: tokens;
                                     lex(newstring,tokens)
-                        case _ => List.reverse(tokens)//"illegal JSON" |> println; Nil
+                        case _ => ???//"illegal JSON" |> println; Nil
                     }
             }
         
@@ -235,10 +247,6 @@ namespace Pkger{
                         }
             }
           
-
-
-
-                
         pub def stringifyPackageInfo(p: PackageInfo): String = 
             let PackageInfo(package1) = p;
             let name = package1.name;

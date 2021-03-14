@@ -15,7 +15,6 @@
  * limitations under the License.
  */
  
- ///TODO pre-release version
  namespace Pkger{
       namespace SemVer{
         instance Eq[SemVer]{
