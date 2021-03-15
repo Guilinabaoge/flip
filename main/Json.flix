@@ -196,7 +196,10 @@ namespace Pkger{
                 case Nil => List.reverse(tokens)//Ok(List.reverse(tokens)) 
                 case n :: rest =>
                     match n {
-                        // TODO figure out how to refactor JSON_SYNTAX too much code duplications case '"' or ' ' => ?
+                        // TODO figure out how to refactor JSON_SYNTAX, too much code duplications case '\n' or ' ' => ignore?
+                        case '\n' =>let restStringList = List.map(Char.toString,rest);
+                                    let newstring = String.flatten(restStringList);
+                                    lex(newstring,tokens)
                         case '"' => let (string, list) = lex_string(rest,"");
                                     let tokens = string :: tokens;
                                     let newstring = String.flatten(list);

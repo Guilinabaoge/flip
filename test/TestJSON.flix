@@ -64,15 +64,18 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
         tokens == expectedtokens
 
     /////////////////////////////////////////////////////////////////////////////
-    // test lex List[Author]                                                    //
+    // test lex List[Author]                T                                    //
     ///////////////////////////////////////////////////////////////////////////// 
     @test 
     def testLex04(): Bool & Impure = 
     use Result.flatMap;
         let quote = Char.toString('"');
         // TODO figure out how to do detect newline \n in a string
-        let testCurly = "{${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},${quote}email${quote}:${quote}None${quote},${quote}website${quote}:${quote}None${quote}}]}";
+        let testCurly = "{${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},
+        ${quote}email${quote}:${quote}None${quote},
+        ${quote}website${quote}:${quote}None${quote}}]}";
         let tokens = lex(testCurly, Nil);
+        tokens |> println;
         let expectedtokens : List[String] = "{" :: "authors" :: ":" :: "[" :: "{" :: "name" :: ":" :: "Peter" :: "," ::"email" :: ":" :: "None" :: "," :: "website" :: ":" :: "None" :: "}" :: "]" :: "}" :: Nil;
         tokens == expectedtokens
 
@@ -134,7 +137,10 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
     def testParse03(): Bool & Impure = 
         let quote = Char.toString('"');
         // TODO figure out how to patter match \n
-        let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote},${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},${quote}email${quote}:${quote}None${quote},${quote}website${quote}:${quote}None${quote}}]}";
+        let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote},
+                    ${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},
+                    ${quote}email${quote}:${quote}None${quote},
+                    ${quote}website${quote}:${quote}None${quote}}]}";
         let tokens = lex(json,Nil);
         //tokens |> println;
         let packageInfo = parseWrapper(tokens);
@@ -155,7 +161,7 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
         // TODO figure out how to patter match \n
         let json = "{${quote}version${quote}:${quote}(1,2,3)${quote}}";
         let tokens = lex(json,Nil);
-        tokens |> println;
+        //tokens |> println;
         let packageInfo = parseWrapper(tokens);
         let expectedpinfo = PackageInfo({name = "",
                                         version = SemVer(1,2,3),
@@ -172,9 +178,10 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
     def testParse05(): Bool & Impure = 
         let quote = Char.toString('"');
         // TODO figure out how to patter match \n
-        let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote},${quote}version${quote}:${quote}(1,2,3)${quote}}";
+        let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote},
+                    ${quote}version${quote}:${quote}(1,2,3)${quote}}";
         let tokens = lex(json,Nil);
-        tokens |> println;
+        //tokens |> println;
         let packageInfo = parseWrapper(tokens);
         let expectedpinfo = PackageInfo({name = "MyPackageNameOne",
                                         version = SemVer(1,2,3),
