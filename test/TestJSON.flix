@@ -70,12 +70,10 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
     def testLex04(): Bool & Impure = 
     use Result.flatMap;
         let quote = Char.toString('"');
-        // TODO figure out how to do detect newline \n in a string
         let testCurly = "{${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},
         ${quote}email${quote}:${quote}None${quote},
         ${quote}website${quote}:${quote}None${quote}}]}";
         let tokens = lex(testCurly, Nil);
-        tokens |> println;
         let expectedtokens : List[String] = "{" :: "authors" :: ":" :: "[" :: "{" :: "name" :: ":" :: "Peter" :: "," ::"email" :: ":" :: "None" :: "," :: "website" :: ":" :: "None" :: "}" :: "]" :: "}" :: Nil;
         tokens == expectedtokens
 
@@ -90,106 +88,103 @@ use Pkger/JSON.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPa
         let expectedtokens : List[String] = "{" :: "}":: Nil;
         tokens == expectedtokens 
 
-    /////////////////////////////////////////////////////////////////////////////
-    // test parse name                                                         //
-    /////////////////////////////////////////////////////////////////////////////
-    @test 
-    def testParse01(): Bool & Impure = 
-        let quote = Char.toString('"');
-        let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote}}";
-        let tokens = lex(json,Nil);
-        let packageInfo = parseWrapper(tokens);
-        let expectedpinfo = PackageInfo({
-                name = "MyPackageNameOne",
-                version = SemVer(0,0,0), 
-                authors = Author({name = "Hi", email = None, website = None}) :: Nil,
-                edition = SemVer(0,0,0),
-                dependencies = PackageDependency({name = "",version = SemVer(0,0,0)}) :: Nil,
-                url = "Nil"});
-        packageInfo == expectedpinfo
+///     /////////////////////////////////////////////////////////////////////////////
+///     // test parse name                                                         //
+///     /////////////////////////////////////////////////////////////////////////////
+///     @test 
+///     def testParse01(): Bool & Impure = 
+///         let quote = Char.toString('"');
+///         let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote}}";
+///         let tokens = lex(json,Nil);
+///         let packageInfo = parseWrapper(tokens);
+///         let expectedpinfo = PackageInfo({
+///                 name = "MyPackageNameOne",
+///                 version = SemVer(0,0,0), 
+///                 authors = Author({name = "Hi", email = None, website = None}) :: Nil,
+///                 edition = SemVer(0,0,0),
+///                 dependencies = PackageDependency({name = "",version = SemVer(0,0,0)}) :: Nil,
+///                 url = "Nil"});
+///         packageInfo == expectedpinfo
 
     
-    /////////////////////////////////////////////////////////////////////////////
-    // test parse List[authors]                                                //
-    /////////////////////////////////////////////////////////////////////////////
-    @test 
-    def testParse02(): Bool & Impure = 
-        let quote = Char.toString('"');
-        let json = "{${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},${quote}email${quote}:${quote}None${quote},${quote}website${quote}:${quote}None${quote}}]}";
-        let tokens = lex(json,Nil);
-        let packageInfo = parseWrapper(tokens);
-        let expectedpinfo = PackageInfo({name = "",
-                                        version = SemVer(0,0,0),
-                                        authors = Author({name = "Peter", email = None, website = None}) :: Nil,
-                                        edition = SemVer(0,0,0),
-                                        dependencies = PackageDependency({name = "",version = SemVer(0,0,0)}) :: Nil,
-                                        url = "Nil"});
+///     /////////////////////////////////////////////////////////////////////////////
+///     // test parse List[authors]                                                //
+///     /////////////////////////////////////////////////////////////////////////////
+///     @test 
+///     def testParse02(): Bool & Impure = 
+///         let quote = Char.toString('"');
+///         let json = "{${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},${quote}email${quote}:${quote}None${quote},${quote}website${quote}:${quote}None${quote}}]}";
+///         let tokens = lex(json,Nil);
+///         let packageInfo = parseWrapper(tokens);
+///         let expectedpinfo = PackageInfo({name = "",
+///                                         version = SemVer(0,0,0),
+///                                         authors = Author({name = "Peter", email = None, website = None}) :: Nil,
+///                                         edition = SemVer(0,0,0),
+///                                         dependencies = PackageDependency({name = "",version = SemVer(0,0,0)}) :: Nil,
+///                                         url = "Nil"});
        
-        /// packageInfo |> println;
-        /// expectedpinfo |> println;
-        expectedpinfo == packageInfo
+///         /// packageInfo |> println;
+///         /// expectedpinfo |> println;
+///         expectedpinfo == packageInfo
 
 
-    /////////////////////////////////////////////////////////////////////////////
-    // test parse name + authors                                               //
-    /////////////////////////////////////////////////////////////////////////////
-    @test 
-    def testParse03(): Bool & Impure = 
-        let quote = Char.toString('"');
-        // TODO figure out how to patter match \n
-        let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote},
-                    ${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},
-                    ${quote}email${quote}:${quote}None${quote},
-                    ${quote}website${quote}:${quote}None${quote}}]}";
-        let tokens = lex(json,Nil);
-        //tokens |> println;
-        let packageInfo = parseWrapper(tokens);
-        let expectedpinfo = PackageInfo({name = "MyPackageNameOne",
-                                        version = SemVer(0,0,0),
-                                        authors = Author({name = "Peter", email = None, website = None}) :: Nil,
-                                        edition = SemVer(0,0,0),
-                                        dependencies = PackageDependency({name = "",version = SemVer(0,0,0)}) :: Nil,
-                                        url = "Nil"});
-        expectedpinfo == packageInfo
+///     /////////////////////////////////////////////////////////////////////////////
+///     // test parse name + authors                                               //
+///     /////////////////////////////////////////////////////////////////////////////
+///     @test 
+///     def testParse03(): Bool & Impure = 
+///         let quote = Char.toString('"');
+///         let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote},
+///                     ${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},
+///                     ${quote}email${quote}:${quote}None${quote},
+///                     ${quote}website${quote}:${quote}None${quote}}]}";
+///         let tokens = lex(json,Nil);
+///         //tokens |> println;
+///         let packageInfo = parseWrapper(tokens);
+///         let expectedpinfo = PackageInfo({name = "MyPackageNameOne",
+///                                         version = SemVer(0,0,0),
+///                                         authors = Author({name = "Peter", email = None, website = None}) :: Nil,
+///                                         edition = SemVer(0,0,0),
+///                                         dependencies = PackageDependency({name = "",version = SemVer(0,0,0)}) :: Nil,
+///                                         url = "Nil"});
+///         expectedpinfo == packageInfo
     
-    /////////////////////////////////////////////////////////////////////////////
-    // test parse Semver                                                       //
-    /////////////////////////////////////////////////////////////////////////////
-    @test 
-    def testParse04(): Bool & Impure = 
-        let quote = Char.toString('"');
-        // TODO figure out how to patter match \n
-        let json = "{${quote}version${quote}:${quote}(1,2,3)${quote}}";
-        let tokens = lex(json,Nil);
-        //tokens |> println;
-        let packageInfo = parseWrapper(tokens);
-        let expectedpinfo = PackageInfo({name = "",
-                                        version = SemVer(1,2,3),
-                                        authors = Author({name = "", email = None, website = None}) :: Nil,
-                                        edition = SemVer(0,0,0),
-                                        dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
-                                        url = "Nil"});
-        expectedpinfo == packageInfo
+///     /////////////////////////////////////////////////////////////////////////////
+///     // test parse Semver                                                       //
+///     /////////////////////////////////////////////////////////////////////////////
+///     @test 
+///     def testParse04(): Bool & Impure = 
+///         let quote = Char.toString('"');
+///         let json = "{${quote}version${quote}:${quote}(1,2,3)${quote}}";
+///         let tokens = lex(json,Nil);
+///         //tokens |> println;
+///         let packageInfo = parseWrapper(tokens);
+///         let expectedpinfo = PackageInfo({name = "",
+///                                         version = SemVer(1,2,3),
+///                                         authors = Author({name = "", email = None, website = None}) :: Nil,
+///                                         edition = SemVer(0,0,0),
+///                                         dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
+///                                         url = "Nil"});
+///         expectedpinfo == packageInfo
     
-    /////////////////////////////////////////////////////////////////////////////
-    // test parse name + Semver                                                 //
-    /////////////////////////////////////////////////////////////////////////////
-    @test 
-    def testParse05(): Bool & Impure = 
-        let quote = Char.toString('"');
-        // TODO figure out how to patter match \n
-        let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote},
-                    ${quote}version${quote}:${quote}(1,2,3)${quote}}";
-        let tokens = lex(json,Nil);
-        //tokens |> println;
-        let packageInfo = parseWrapper(tokens);
-        let expectedpinfo = PackageInfo({name = "MyPackageNameOne",
-                                        version = SemVer(1,2,3),
-                                        authors = Author({name = "", email = None, website = None}) :: Nil,
-                                        edition = SemVer(0,0,0),
-                                        dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
-                                        url = "Nil"});
-        expectedpinfo == packageInfo
+///     /////////////////////////////////////////////////////////////////////////////
+///     // test parse name + Semver                                                 //
+///     /////////////////////////////////////////////////////////////////////////////
+///     @test 
+///     def testParse05(): Bool & Impure = 
+///         let quote = Char.toString('"');
+///         let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote},
+///                     ${quote}version${quote}:${quote}(1,2,3)${quote}}";
+///         let tokens = lex(json,Nil);
+///         //tokens |> println;
+///         let packageInfo = parseWrapper(tokens);
+///         let expectedpinfo = PackageInfo({name = "MyPackageNameOne",
+///                                         version = SemVer(1,2,3),
+///                                         authors = Author({name = "", email = None, website = None}) :: Nil,
+///                                         edition = SemVer(0,0,0),
+///                                         dependencies = PackageDependency({name = "Hi",version = SemVer(0,0,0)}) :: Nil,
+///                                         url = "Nil"});
+///         expectedpinfo == packageInfo
         
       
 

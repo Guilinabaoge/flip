@@ -51,8 +51,10 @@ namespace Pkger{
                         case _  => parse_object(tokens,json_object)
                      }
             }
+        
+     
 
-        //TODO function must specifi the List type, is making two functions to parse List[Author] List[Dependency] the right thing to do?
+        //function must specifi the List type, is making two functions to parse List[Author] List[Dependency] the right thing to do? parser combinator 
         def parse_array_authors(tokens: List[String],authorlist:List[Author]): (List[Author],List[String]) & Impure= 
             let alist = Author({name = "Peter", email = None, website = None})::Nil;
             use Option.flatMap;
@@ -60,7 +62,7 @@ namespace Pkger{
                 case Nil => ??? //illegal JSON
                 case n :: rest => 
                     match n {
-                        //TODO solve code duplication 
+                        // solve code duplication 
                         case "," => parse_array_authors(rest,alist)
                         case "}" => parse_array_authors(rest,alist)
                         case "{" => parse_array_authors(rest,alist)
@@ -85,7 +87,7 @@ namespace Pkger{
                                             case n2 :: rest2 => if (n2 == ":"){
                                                                     match rest2{
                                                                         case Nil => ??? // illegal JSON 
-                                                                        case n3 :: rest3 => match List.head(alist){ //TODO let* for Option? 
+                                                                        case n3 :: rest3 => match List.head(alist){ //let* for Option? not result map and option map at same time
                                                                             case None => ???// illegal JSON 
                                                                             case Some(y) => let Author(x) = y;
                                                                                             let newauthor = Author({email = None | x});
@@ -125,6 +127,8 @@ namespace Pkger{
                 case Nil => ???
                 case n :: rest =>
                     match n {
+                        //not an issue know but maybe a bug?
+                        //case "\"" => json_object
                         case "}" => json_object
                         case "," => parse_object(rest,json_object)
                         case "version" => match rest {
