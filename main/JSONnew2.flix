@@ -21,52 +21,52 @@ namespace Pkger{
             case JNumber(Int32)
         }
 
-        pub def parse(tokens: List[String], result: Map[String,JSON]): Result[JSON,String] & Impure= 
-            use Result.flatMap;
+        pub def parse(tokens: List[String], _result: Map[String,JSON]): Result[(JSON,List[String]),String] & Impure= 
             match tokens {
-                case Nil => Err("Missing close }")
+                case Nil => "Hi19" |> println; Err("Missing close }")
                 case n :: rest => match n {
-                    case "{" => 
-                    let key_value_pair = List.slice(0,3,rest);
-                    let colon = List.indexOf(":",key_value_pair);
-                    if (colon != 1){
-                        Err("Illegal key-value pair")
-                    }
-                    else {
-                        let key = match List.head(rest) {
-                            case None => "None"
-                            case Some(y) => y
-                        };
-                        let* value = pJObject(List.slice(2,3,rest));
-                        let result2 = Map.insert(key,value,result);
-                        let rest = List.slice(3,List.length(rest),rest);
-                        parse(rest,result2)}
-                        
-                    case "[" => ??? //parse array
-                    case _ => ???
+                    case "{" => pJObject(rest,Map.empty())
+                    case "[" => pJArray(rest,Nil)
+                    case _ => Ok((JString(n),rest))
                 }
             }
-    
-        pub def pJObject(tokens: List[String]): Result[JSON,String] = 
+        
+        pub def pJArray(tokens: List[String], list: List[JSON]): Result[(JSON,List[String]),String] & Impure= 
+        use Result.flatMap;
             match tokens {
-                case Nil => Err("Missing close }")
-                case n :: _rest => match n {
-                    case "}" => Ok(JObject(Map.empty()))
+                case Nil => Err("missing ]")
+                case n::rest => match n{
+                    case "]" => Ok(JArray(list),rest)
                     case _ => 
-                        let key_value_pair = List.slice(0,3,tokens);
-                        let colon = List.indexOf(":",key_value_pair);
+                    let* (parsedvalue,resttokens) = parse(tokens,Map.empty());
+                    let newlist = parsedvalue :: list;
+                    pJArray(resttokens,newlist)
+                } 
+            }
+    
+        pub def pJObject(tokens: List[String],result: Map[String,JSON]): Result[(JSON,List[String]),String] & Impure = 
+        use Result.flatMap;
+            match tokens {
+                case Nil => Err("missing }")
+                case n :: rest => match n {
+                    case "}" => Map.get("authors",result)|> println; Ok((JObject(result),rest))
+                    case "," => pJObject(rest,result)
+                    case _ => 
+                    let key_value_pair = List.slice(0,3,tokens);
+                    let colon = List.indexOf(":",key_value_pair);
                     if (colon != 1){
+                        "COLON" |> println;
                         Err("Illegal key-value pair")
                     }
                     else {
-                        let value = match List.last(key_value_pair){
-                            case None => "None"
-                            case Some(y) => y
-                        };
-                        let map = Map.empty();
-                        let map2 = Map.insert("${n}",JString("${value}"),map);
-                        //map2 |> println;
-                        Ok(JObject(map2))
+                        let restofrest = List.slice(1,List.length(rest),rest);
+                        let* (parsedv,rest2) = parse(restofrest,Map.empty());
+                        let result2 = Map.insert("${n}",parsedv,result);
+                        //TODO what's wrong with the print statement under? 
+                        //result2|> println;
+                        //"rest2" |> println;
+                        //rest2 |> println;
+                        pJObject(rest2,result2)
                     }
                 }
             }
