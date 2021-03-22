@@ -16,49 +16,49 @@ use Pkger/JSONnew2.{parse};
 use Pkger/JSONnew2.JSON.JObject;
 use Pkger/JSONnew2.JSON.JString;
     
-    @test 
-    def testCombi01(): Bool & Impure = 
-        use Result.flatMap;
-        let quote = Char.toString('"');
-        let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote}}";
-        let tokens = lex(json,Nil);
-        parse(tokens,Map.empty());
-        /// let map = Map.empty();
-        /// let _map2 = Map.insert("name",JString("MyPackageNameOne"),map);
-        true
-        //let expectjo = Ok(JObject(map2));
-        //map2 |> println;
-        //jobject == expectjo
+    /// @test 
+    /// def testCombi01(): Bool & Impure = 
+    ///     use Result.flatMap;
+    ///     let quote = Char.toString('"');
+    ///     let json = "{${quote}name${quote}:${quote}MyPackageNameOne${quote}}";
+    ///     let tokens = lex(json,Nil);
+    ///     parse(tokens);
+    ///     /// let map = Map.empty();
+    ///     /// let _map2 = Map.insert("name",JString("MyPackageNameOne"),map);
+    ///     true
+    ///     //let expectjo = Ok(JObject(map2));
+    ///     //map2 |> println;
+    ///     //jobject == expectjo
         
        
 
-    @test 
-    def testCombi02(): Bool & Impure = 
-        use Result.flatMap;
-        let quote = Char.toString('"');
-        let json = "{${quote}name${quote}:${quote}MyPackageNameTwo${quote}}";
-        let tokens = lex(json,Nil);
-        parse(tokens,Map.empty());
-        /// let map = Map.empty();
-        /// let _map2 = Map.insert("name",JString("MyPackageNameTwo"),map);
-        //let expectjo = Ok(JObject(map2));
-        true
-        //map2 |> println;
-        //jobject == expectjo
+    /// @test 
+    /// def testCombi02(): Bool & Impure = 
+    ///     use Result.flatMap;
+    ///     let quote = Char.toString('"');
+    ///     let json = "{${quote}name${quote}:${quote}MyPackageNameTwo${quote}}";
+    ///     let tokens = lex(json,Nil);
+    ///     parse(tokens);
+    ///     /// let map = Map.empty();
+    ///     /// let _map2 = Map.insert("name",JString("MyPackageNameTwo"),map);
+    ///     //let expectjo = Ok(JObject(map2));
+    ///     true
+    ///     //map2 |> println;
+    ///     //jobject == expectjo
 
-    @test 
-    def testCombi03(): Bool & Impure = 
-        use Result.flatMap;
-        let quote = Char.toString('"');
-        let json = "{${quote}name${quote}:${quote}MyPackageNameTwo${quote},${quote}live${quote}:${quote}BadLife${quote}}";
-        let tokens = lex(json,Nil);
-        parse(tokens,Map.empty());
-        /// let map = Map.empty();
-        /// let _map2 = Map.insert("name",JString("MyPackageNameTwo"),map);
-        //let expectjo = Ok(JObject(map2));
-        true
-        //map2 |> println;
-        //jobject == expectjo
+    /// @test 
+    /// def testCombi03(): Bool & Impure = 
+    ///     use Result.flatMap;
+    ///     let quote = Char.toString('"');
+    ///     let json = "{${quote}name${quote}:${quote}MyPackageNameTwo${quote},${quote}testkey${quote}:${quote}testvalue${quote}}";
+    ///     let tokens = lex(json,Nil);
+    ///     parse(tokens);
+    ///     /// let map = Map.empty();
+    ///     /// let _map2 = Map.insert("name",JString("MyPackageNameTwo"),map);
+    ///     //let expectjo = Ok(JObject(map2));
+    ///     true
+    ///     //map2 |> println;
+    ///     //jobject == expectjo
 
     @test 
     def testCombi04(): Bool & Impure = 
@@ -67,7 +67,7 @@ use Pkger/JSONnew2.JSON.JString;
         let json = "{${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},${quote}email${quote}:${quote}None${quote},${quote}website${quote}:${quote}None${quote}}]}";
         let tokens = lex(json,Nil);
         //tokens |> println;
-        parse(tokens,Map.empty());
+        parse(tokens);
         /// let map = Map.empty();
         /// let _map2 = Map.insert("name",JString("MyPackageNameTwo"),map);
         //let expectjo = Ok(JObject(map2));
@@ -97,10 +97,26 @@ use Pkger/JSONnew2.JSON.JString;
             }";
         let tokens = lex(json,Nil);
         //tokens |> println;
-        parse(tokens,Map.empty());
+        parse(tokens);
         /// let map = Map.empty();
         /// let _map2 = Map.insert("name",JString("MyPackageNameTwo"),map);
         //let expectjo = Ok(JObject(map2));
         true
         //map2 |> println;
         //jobject == expectjo
+
+    /// @test 
+    /// def testCombi06(): Bool & Impure = 
+    ///     use Result.flatMap;
+    ///     let quote = Char.toString('"');
+    ///     let json = "{${quote}authors${quote}:[{${quote}name${quote}:${quote}Peter${quote},${quote}email${quote}:${quote}None${quote},${quote}website${quote}:${quote}None${quote}},
+    ///     {${quote}name${quote}:${quote}Peter${quote},${quote}email${quote}:${quote}None${quote},${quote}website${quote}:${quote}None${quote}}]}";
+    ///     let tokens = lex(json,Nil);
+    ///     //tokens |> println;
+    ///     parse(tokens);
+    ///     /// let map = Map.empty();
+    ///     /// let _map2 = Map.insert("name",JString("MyPackageNameTwo"),map);
+    ///     //let expectjo = Ok(JObject(map2));
+    ///     true
+    ///     //map2 |> println;
+    ///     //jobject == expectjo
