@@ -1,40 +1,40 @@
+/*
+ * Copyright 2021 Zhiwei Zeng
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 use Pkger/Author.Author;
 use Pkger/Author.Author.Author;
+use Pkger/JSON.JSON;
+use Pkger/JSON.JSON.{JString,JNumber,JArray,JObject};
 
 namespace Pkger{
-    namespace JSONnew2{
-        instance Eq[JSON]{
-            pub def eq(x: JSON, y: JSON): Bool = match (x,y){
-                case (JObject(a),JObject(b)) => a == b
-                case (JString(a),JString(b)) => a == b 
-            }
-            pub def neq(x: JSON, y: JSON): Bool = ???
-        }
-
-        instance ToString[JSON]{
-            pub def toString(x: JSON): String = match x {
-                case JString(s) => s
-                case JObject(x) => Int32.toString(Map.count((k,b)->true,x))   // map tostring?
-                case JArray(a) => let arraylengh = Int32.toString(List.length(a)); "Array with length ${arraylengh}"
-            }
-        }
-
-        pub enum JSON{
-            case JObject(Map[String,JSON])
-            case JArray(List[JSON])
-            case JString(String)
-            case JNumber(Int32)
-        }
-
+    namespace JSONParser{
         pub def parse(tokens: List[String]): Result[(JSON,List[String]),String] & Impure= 
             match tokens {
                 case Nil => Err("Missing close }")
                 case n :: rest => match n {
                     case "{" => pJObject(rest,Map.empty())
                     case "[" => pJArray(rest,Nil)
-                    case _ => Ok((JString(n),rest))
+                    case _ => pString(tokens)
                 }
             }
+        pub def pString(tokens: List[String]): Result[(JSON,List[String]),String] =
+            match tokens {
+                case Nil => Err("Missing close }")
+                case n :: rest => Ok((JString(n),rest))
+            }
+
         
         pub def pJArray(tokens: List[String], list: List[JSON]): Result[(JSON,List[String]),String] & Impure= 
         use Result.flatMap;
@@ -54,8 +54,7 @@ namespace Pkger{
             match tokens {
                 case Nil => Err("missing }")
                 case n :: rest => match n {
-                    //can't print result|> println;result|> println; Map.get("version",result)|> println; 
-                    case "}" => result|> println;  Ok((JObject(result),rest))
+                    case "}" => Ok((JObject(result),rest))
                     case "," => pJObject(rest,result)
                     case _ => 
                     let key_value_pair = List.slice(0,3,tokens);
@@ -79,9 +78,17 @@ namespace Pkger{
                 let authorEmail = Map.get("email",o);
                 let authorWebsite = Map.get("website",o);
                 match (authorName,authorEmail,authorWebsite) {
-                    //TODO why is String can't fit in Option[String] but String can? how to cast from String to Option String
-                    case (Some(JString(actualAuhorName)),Some(JString(_actualAuhorEmail)),Some(JString(_actualAuhorWebsite))) => 
-                    Ok(Author({name = actualAuhorName,email = None,website = None})) 
+                    //TODO handle the error cases author exist and not exist 
+                    case (Some(JString(actualAuhorName)),Some(JString(actualAuhorEmail)),Some(JString(actualAuhorWebsite))) => 
+                    let resolveEmail = match actualAuhorEmail{
+                        case "None" => None 
+                        case _ => Some(actualAuhorEmail)
+                    };
+                    let resolveWebsite = match actualAuhorWebsite{
+                        case "None" => None 
+                        case _ => Some(actualAuhorEmail)
+                    };
+                    Ok(Author({name = actualAuhorName,email = resolveEmail,website = resolveWebsite})) 
                     case (None,Some(_),Some(_)) => Err("Missing authorname")
                     case _ => Err("email or website type unexpect")
                 }

@@ -18,7 +18,7 @@
 use Pkger/SemVer.SemVer;
 use Pkger/Author.Author;
 use Pkger/Dependency.PackageDependency;
-use Pkger/JSON.{stringifyAuthors,stringifyDependency,stringifySemver};
+use Pkger/Lex.{stringifyAuthors,stringifyDependency,stringifySemver};
 
 namespace Pkger{
     namespace PackageInfo{
