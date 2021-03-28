@@ -23,10 +23,8 @@ use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
 use Pkger/Dependency.PackageDependency;
 
-
 namespace Pkger{
     namespace Lex{
-        
         pub def lex(s: String, tokens: List[String]): List[String] & Impure= 
             let stringList = String.toList(s);
             match stringList {
@@ -85,7 +83,10 @@ namespace Pkger{
                                             lex_string(rest,stringnew)
                         }
             }
-          
+
+        //
+        // Turn a packageinfo into a json string
+        //      
         pub def stringifyPackageInfo(p: PackageInfo): String = 
             let PackageInfo(package1) = p;
             let name = package1.name;
@@ -119,7 +120,6 @@ namespace Pkger{
             let authorStringList = List.formatWith(makeAuthorString, "," , authors);
             authorStringList 
 
-        ///
 
         def makeAuthorString(a: Author): String = 
             let Author(authorRecord) = a;

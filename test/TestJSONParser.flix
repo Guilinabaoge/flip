@@ -136,11 +136,24 @@ use Pkger/JSON.JSON.JArray;
         let expect = Ok("Hello");
         hello == expect
 
+    //
+    // test single digit version 
+    //
     @test 
-    def testJson2Semver(): Bool = 
+    def testJson2Semver01(): Bool & Impure= 
         let jstring = JString("(1,2,3)");
         let semver = jstring2Semver(jstring);
         let expect = Ok(SemVer(1,2,3));
+        semver == expect
+    
+    //
+    // test 2 digit version 
+    //
+    @test 
+    def testJson2Semver02(): Bool & Impure= 
+        let jstring = JString("(14,2,3)");
+        let semver = jstring2Semver(jstring);
+        let expect = Ok(SemVer(14,2,3));
         semver == expect
 
     @test 
@@ -172,3 +185,14 @@ use Pkger/JSON.JSON.JArray;
                 x == expect
             case Err(_) => false
         }
+    
+    @test 
+    def testStringify(): Bool = 
+        let ex3 = examplePackage3();
+        let _stringex3 = stringifyPackageInfo(ex3);
+        true 
+
+    
+        
+
+    

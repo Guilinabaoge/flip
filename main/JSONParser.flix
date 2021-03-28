@@ -145,41 +145,74 @@ namespace Pkger{
             case JArray(_) => Err("Unexpected JArray")
         }
 
-        pub def jstring2Semver(j: JSON): Result[SemVer,String]= 
+        pub def jstring2Semver(j: JSON): Result[SemVer,String] & Impure= 
         use Result.flatMap; 
         match j {
-           case JString(s) => let* (major,minor,patch) = getVersion(String.toList(s));
+           case JString(s) => let* (major,minor,patch) = getVersion(String.toList(s),Nil);
                              Ok(SemVer(major,minor,patch))
             case JObject(_) => Err("Unexpected JObject")
             case JArray(_) => Err("Unexpected JArray")
         }
 
-        def getVersion(s: List[Char]): Result[(Int32,Int32,Int32),String] = 
-            let major = parseChar2Num(List.slice(1,2,s));
-            let minor = parseChar2Num(List.slice(3,4,s));
-            let patch = parseChar2Num(List.slice(5,6,s));
-            Ok((major,minor,patch))
+        def getVersion(s: List[Char],tokens: List[String]): Result[(Int32,Int32,Int32),String] & Impure= 
+            //s |> println;
+            match s {
+                case Nil => let reverse = List.reverse(tokens); parseTokens(reverse)
+                case n::rest => match n {
+                    case '(' => getVersion(rest,tokens)
+                    //case ',' => getVersion(rest,tokens)
+                    case _ => let (num,rest2) = parse2digits(s,""); 
+                              let newtoken = num :: tokens;
+                              getVersion(rest2,newtoken)
+                }
+            }
+        def parse2digits(s: List[Char],num: String): (String,List[Char]) & Impure= 
+            match s {
+                case Nil => ???
+                case n::rest => 
+                match n {
+                    case ',' => let newnum = String.reverse(num); (newnum,rest)
+                    case ')' => let newnum = String.reverse(num); (newnum,rest)
+                    case _ => 
+                    let newnum = Char.toString(n) + num; 
+                    //newnum |> println;
+                    parse2digits(rest,newnum)
+                }
+            }
         
-        def parseChar2Num(c: List[Char]): Int32 = 
-            let result = match List.head(c) {
-                case None => 'n'
+        def parseTokens(tokens: List[String]): Result[(Int32,Int32,Int32),String] & Impure= 
+            let intstring = List.map(Int32.fromString,tokens);
+            let major1 = List.head(intstring);
+            let major2 = match major1{
+                //TODO is there a way to report error when None appears?
+                case None => ???
                 case Some(y) => y
             };
-            match result {
-                //TODO Ugly code and don't support version number with more than 1 digit
-                case '0' => 0
-                case '1' => 1 
-                case '2' => 2 
-                case '3' => 3
-                case '4' => 4
-                case '5' => 5
-                case '6' => 6
-                case '7' => 7
-                case '8' => 8
-                case '9' => 9
-                case _ =>???
-            }
+            let major3 = match major2{
+                case Err(_) => ???
+                case Ok(y) => y
+            };
+            let minor1 = List.head(List.slice(1,2,intstring));
+            let minor2 = match minor1 {
+                case None => ???
+                case Some(y) => y
+            };
+            let minor3 = match minor2{
+                case Err(_) => ???
+                case Ok(y) => y
+            };
 
+            let patch1 = List.head(List.slice(2,3,intstring));
+            let patch2 = match patch1 {
+                case None => ???
+                case Some(y) => y
+            };
+            let patch3 = match patch2{
+                case Err(_) => ???
+                case Ok(y) => y
+            };
+            Ok(major3,minor3,patch3)
+            
             
     }
 }
