@@ -28,6 +28,14 @@
             pub def neq(x:SemVer,y: SemVer): Bool = false
         }
 
+        instance ToString[SemVer]{
+            pub def toString(s: SemVer): String = 
+                let SemVer(major,minor,patch) = s;
+                "SemVer(${major},${minor},${patch})"
+        }
+
+        
+
         pub enum SemVer{
             case SemVer(Int32, Int32, Int32)
         }

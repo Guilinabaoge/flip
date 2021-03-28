@@ -32,8 +32,9 @@ namespace Pkger{
                 p1.authors == p2.authors and 
                 p1.edition == p2.edition and 
                 p1.dependencies == p2.dependencies 
+                
 
-            pub def neq(x:PackageInfo, y:PackageInfo) : Bool = false 
+            pub def neq(x:PackageInfo, y:PackageInfo) : Bool = false
         }   
 
         instance ToString[PackageInfo] {
@@ -45,7 +46,7 @@ namespace Pkger{
                 let edition = stringifySemver(package1.edition);
                 let dependencies = stringifyDependency(package1.dependencies);
                 let url = package1.url;
-                
+                //TODO ugly code 
                 let packageInfoString = Char.toString('"')+"name"+Char.toString('"') + ":" + Char.toString('"')+name+Char.toString('"') + "," + String.lineSeparator()+
                                         Char.toString('"')+"version"+Char.toString('"') + ":" + Char.toString('"')+version+Char.toString('"') + "," +String.lineSeparator()+
                                         Char.toString('"')+"authors"+Char.toString('"') + ":" + "["+authors+"]" + "," +String.lineSeparator()+

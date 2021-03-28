@@ -34,7 +34,6 @@ namespace Pkger{
             case JObject(Map[String,JSON])
             case JArray(List[JSON])
             case JString(String)
-            case JNumber(Int32)
         }
     }
 }

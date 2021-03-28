@@ -26,6 +26,14 @@ namespace Pkger{
             }
             pub def neq(x:PackageDependency,y: PackageDependency): Bool = false
         }
+
+        instance ToString[PackageDependency] {
+            def toString(x: PackageDependency): String = 
+                let PackageDependency(a1) = x;
+                let string = "name: ${a1.name}  version: ${a1.version}}";
+                string
+        } 
+
         pub enum PackageDependency {
             case PackageDependency({name: String, version : SemVer})  
             //case FileDependency(String, String)  

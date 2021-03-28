@@ -27,7 +27,7 @@ use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
 use Pkger/Dependency.PackageDependency;
 use Pkger/Lex.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPackageInfo,lex};
-use Pkger/JSONParser.{parse,json2author};
+use Pkger/JSONParser.{parse,json2author,jstring2string,jstring2Semver,json2Dependency,json2PackageInfo};
 use Pkger/JSON.JSON.JObject;
 use Pkger/JSON.JSON.JString;
 use Pkger/JSON.JSON.JArray;
@@ -89,7 +89,6 @@ use Pkger/JSON.JSON.JArray;
             case Err(_) => false 
         }
 
-
     
     @test 
     def testCombi05(): Bool & Impure = 
@@ -129,4 +128,47 @@ use Pkger/JSON.JSON.JArray;
         let author = json2author(jobject);
         let expect = Ok(Author({name = "Peter", email = None, website = None}));
         author == expect
-      
+
+    @test 
+    def testJString2String(): Bool = 
+        let jstring = JString("Hello");
+        let hello = jstring2string(jstring);
+        let expect = Ok("Hello");
+        hello == expect
+
+    @test 
+    def testJson2Semver(): Bool = 
+        let jstring = JString("(1,2,3)");
+        let semver = jstring2Semver(jstring);
+        let expect = Ok(SemVer(1,2,3));
+        semver == expect
+
+    @test 
+    def testJson2Dependencies(): Bool & Impure = 
+        let jobject = JObject(Map#{"name"->JString("MyPackageNameTwo"), "version" -> JString("(2,0,0)")});
+        let dep = json2Dependency(jobject);
+        let expect = Ok(PackageDependency({name = "MyPackageNameTwo", version = SemVer(2,0,0)}));
+        dep == expect
+
+    @test 
+    def testJson2PackageInfo(): Bool & Impure= 
+    use Result.flatMap;
+        let authorsmap = JArray(JObject(Map#{"name"->JString("Peter"),"email"->JString("None"),"website"->JString("None")})::Nil);
+        let dependenciesmap = JArray(JObject(Map#{"packagename"->JString("MyPackageNameTwo"), "packageversion" -> JString("(2,0,0)")})::Nil);
+        let testinput = JObject(Map#{"name"->JString("MyPackageNameOne"), "version" -> JString("(1,0,0)"), "authors"->authorsmap, "edition" -> JString("(0,4,6)"),
+        "dependencies" -> dependenciesmap, "url" -> JString("Nil")});
+        let expect = PackageInfo({
+                name = "MyPackageNameOne",
+                version = SemVer(1,0,0), 
+                authors = Author({name = "Peter", email = None, website = None}) :: Nil,
+                edition = SemVer(0,4,6),
+                dependencies = PackageDependency({name = "MyPackageNameTwo",version = SemVer(2,0,0)}) :: Nil,
+                url = "Nil"});
+        match json2PackageInfo(testinput){
+            case Ok(x) => let PackageInfo(_x1) = x;
+                /// x1.authors|> println; 
+                /// expect |> println; 
+                //TODO this test should be fail 
+                x == expect
+            case Err(_) => false
+        }
