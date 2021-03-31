@@ -31,43 +31,176 @@ namespace Pkger{
                 dependencies = PackageDependency({name = "MyPackageNameTwo",version = SemVer(2,0,0)}) :: Nil,
                 url = "Nil"})
 
-        pub def examplePackage2(): PackageInfo = 
-                PackageInfo({
-                    name = "MyPackageNameTwo",
-                    version = SemVer(2,0,0), 
-                    authors = Author({name = "Jens", email = None, website = None}) :: Nil,
-                    edition = SemVer(0,14,6),
-                    dependencies = Nil,
-                    url = "Nil"})
+        /// pub def examplePackage2(): PackageInfo = 
+        ///         PackageInfo({
+        ///             name = "MyPackageNameTwo",
+        ///             version = SemVer(2,0,0), 
+        ///             authors = Author({name = "Jens", email = None, website = None}) :: Nil,
+        ///             edition = SemVer(0,14,6),
+        ///             dependencies = Nil,
+        ///             url = "Nil"})
 
-        pub def examplePackage3(): PackageInfo = 
-                PackageInfo({
-                    name = "MyPackageNameThree",
-                    version = SemVer(3,0,0), 
-                    authors = Author({name = "Mathias", email = None, website = None}) :: Nil,
-                    edition = SemVer(0,14,6),
-                    dependencies = Nil,
-                    url = "Nil"})
+        /// pub def examplePackage3(): PackageInfo = 
+        ///         PackageInfo({
+        ///             name = "MyPackageNameThree",
+        ///             version = SemVer(3,0,0), 
+        ///             authors = Author({name = "Mathias", email = None, website = None}) :: Nil,
+        ///             edition = SemVer(0,14,6),
+        ///             dependencies = Nil,
+        ///             url = "Nil"})
 
-        pub def examplePackage4(): PackageInfo = 
-                PackageInfo({
-                    name = "MyPackageNameFour",
-                    version = SemVer(4,0,0), 
-                    authors = Author({name = "Paul", email = None, website = None}) :: Nil,
-                    edition = SemVer(0,14,6),
-                    dependencies = Nil,
-                    url = "Nil"})
+        /// pub def examplePackage4(): PackageInfo = 
+        ///         PackageInfo({
+        ///             name = "MyPackageNameFour",
+        ///             version = SemVer(4,0,0), 
+        ///             authors = Author({name = "Paul", email = None, website = None}) :: Nil,
+        ///             edition = SemVer(0,14,6),
+        ///             dependencies = Nil,
+        ///             url = "Nil"})
 
-        pub def examplePackage5(): PackageInfo = 
-                PackageInfo({
-                    name = "MyPackageNameFive",
-                    version = SemVer(5,0,0), 
-                    authors = Author({name = "Simon", email = None, website = None}) :: Nil,
-                    edition = SemVer(0,14,6),
-                    dependencies = Nil,
-                    url = "Nil"})
+        /// pub def examplePackage5(): PackageInfo = 
+        ///         PackageInfo({
+        ///             name = "MyPackageNameFive",
+        ///             version = SemVer(5,0,0), 
+        ///             authors = Author({name = "Simon", email = None, website = None}) :: Nil,
+        ///             edition = SemVer(0,14,6),
+        ///             dependencies = Nil,
+        ///             url = "Nil"})
 
+        pub def crawler(): PackageInfo = 
+            PackageInfo({
+                name = "crawler",
+                version = SemVer(1,3,0),
+                authors = Author({name = "sylvinus",email = None, website = None}) :: Author({name = "paulvalla", email = None, website = Some("https://github.com/paulvalla")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = PackageDependency({name = "bottleneckp", version = SemVer(1,1,3)})::
+                               PackageDependency({name = "cheerio", version = SemVer(1,0,0)}) ::
+                               PackageDependency({name = "request", version = SemVer(2,88,2)}) :: Nil,
+                url = "https://github.com/bda-research/node-crawler"
+            })
+        
+        pub def bottleneckp(): PackageInfo = 
+            PackageInfo({
+                name = "bottleneckp",
+                version = SemVer(1,1,3),
+                authors = Author({name = "darrenqc", email = None, website = Some("https://github.com/darrenqc")})::
+                          Author({name = "mike442144", email = None, website = None}):: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil, 
+                url = "https://github.com/darrenqc/BottleneckP"
+            })
+        
+        pub def cheerio(): PackageInfo = 
+            PackageInfo({
+                name = "cheerio", 
+                version = SemVer(1,0,0),
+                authors = Author({name = "mattmueller", email = None, website = None}) ::
+                          Author({name = "davidchambers", email = None, website = Some("https://github.com/davidchambers")})::Nil,
+                edition = SemVer(0,14,6),
+                dependencies = PackageDependency({name = "cheerio-select", version = SemVer(0,1,1)})::
+                               PackageDependency({name = "entities", version = SemVer(2,2,0)})::Nil,
+                url = "https://github.com/cheeriojs/cheerio"
+            })
 
+        pub def cheerio_select(): PackageInfo = 
+            PackageInfo({
+                name ="cheerio-select", 
+                version = SemVer(0,1,1),
+                authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = PackageDependency({name = "css-select", version = SemVer(3,1,2)}) :: 
+                               PackageDependency({name = "css-what", version = SemVer(5,0,0)}) :: Nil,
+                url = "https://github.com/cheeriojs/cheerio-select"
+
+            })
+
+        pub def css_select(): PackageInfo = 
+            PackageInfo({
+                name ="css-select", 
+                version = SemVer(3,1,2),
+                authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")})::
+                          Author({name = "chriseppstein", email = None, website = Some("https://github.com/chriseppstein")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = PackageDependency({name = "boolbase", version = SemVer(1,0,0)}) :: 
+                               PackageDependency({name = "css-what", version = SemVer(5,0,0)}) :: Nil,
+                url = "https://github.com/fb55/css-select"
+
+            })
+
+        pub def css_what(): PackageInfo = 
+            PackageInfo({
+                name ="css-what", 
+                version = SemVer(5,0,0),
+                authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")})::
+                          Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil,
+                url = "https://github.com/fb55/css-what"
+
+            })
+
+        pub def entities(): PackageInfo = 
+            PackageInfo({
+                name = "entities", 
+                version = SemVer(2,2,0),
+                authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil,
+                url = "https://github.com/fb55/entities"
+            })
+
+        pub def boolbase(): PackageInfo = 
+            PackageInfo({
+                name = "boolbase", 
+                version = SemVer(1,0,0),
+                authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil,
+                url = "Nil??"
+            })
+        
+         pub def request(): PackageInfo = 
+            PackageInfo({
+                name = "request",
+                version = SemVer(2,88,2),
+                authors = Author({name = "fredkschott",email = None, website = None}) :: 
+                          Author({name = "Mikeal Rogers", email = None, website = Some("https://github.com/mikeal")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = PackageDependency({name = "caseless", version = SemVer(0,12,0)})::
+                               PackageDependency({name = "extend", version = SemVer(3,0,2)}) ::
+                               PackageDependency({name = "json-stringify-safe", version = SemVer(5,0,1)}) :: Nil,
+                url = "https://github.com/request/request"
+            })
+        
+        pub def caseless(): PackageInfo = 
+            PackageInfo({
+                name = "caseless",
+                version = SemVer(0,12,0),
+                authors = Author({name = "Mikeal Rogers", email = None, website = Some("https://github.com/mikeal")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil,
+                url = "https://github.com/mikeal/caseless"
+            })
+        
+        pub def extend(): PackageInfo = 
+            PackageInfo({
+                name = "extend",
+                version = SemVer(3,0,2),
+                authors = Author({name = "justmoon", email = None, website = Some("https://github.com/justmoon")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil,
+                url = "https://github.com/justmoon/node-extend"
+            })
+        
+        pub def json_stringify_safe(): PackageInfo = 
+            PackageInfo({
+                name = "json-stringify-safe",
+                version = SemVer(5,0,1),
+                authors = Author({name = "isaacs", email = None, website = Some("https://github.com/isaacs")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil,
+                url = "https://github.com/isaacs/json-stringify-safe"
+            })
     }
 }
 

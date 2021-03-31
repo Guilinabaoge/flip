@@ -46,6 +46,7 @@ namespace Pkger{
                 let edition = stringifySemver(package1.edition);
                 let dependencies = stringifyDependency(package1.dependencies);
                 let url = package1.url;
+                let quote = Char.toString('"');
                 //TODO ugly code 
                 let packageInfoString = Char.toString('"')+"name"+Char.toString('"') + ":" + Char.toString('"')+name+Char.toString('"') + "," + String.lineSeparator()+
                                         Char.toString('"')+"version"+Char.toString('"') + ":" + Char.toString('"')+version+Char.toString('"') + "," +String.lineSeparator()+
@@ -53,6 +54,7 @@ namespace Pkger{
                                         Char.toString('"')+"edition"+Char.toString('"') + ":" + Char.toString('"')+edition+Char.toString('"') + "," +String.lineSeparator()+
                                         Char.toString('"')+"dependencies"+Char.toString('"') + ":" + "["+dependencies+"]" + "," +String.lineSeparator()+
                                         Char.toString('"')+"url"+Char.toString('"') + ":" + Char.toString('"')+url+Char.toString('"');
+                                        
                 packageInfoString
         } 
 

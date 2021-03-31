@@ -16,10 +16,10 @@
 use Pkger/PackageInfo.PackageInfo;
 use Pkger/PackageInfo.PackageInfo.PackageInfo;
 use Pkger/Examples.examplePackage1;
-use Pkger/Examples.examplePackage2;
-use Pkger/Examples.examplePackage3;
-use Pkger/Examples.examplePackage4;
-use Pkger/Examples.examplePackage5;
+/// use Pkger/Examples.examplePackage2;
+/// use Pkger/Examples.examplePackage3;
+/// use Pkger/Examples.examplePackage4;
+/// use Pkger/Examples.examplePackage5;
 use Pkger/SemVer.SemVer.SemVer;
 use Pkger/SemVer.SemVer;
 use Pkger/Author.Author;
@@ -188,7 +188,7 @@ use Pkger/JSON.JSON.JArray;
     
     @test 
     def testStringify(): Bool = 
-        let ex3 = examplePackage3();
+        let ex3 = examplePackage1();
         let _stringex3 = stringifyPackageInfo(ex3);
         true 
 
