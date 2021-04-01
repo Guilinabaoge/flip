@@ -69,5 +69,14 @@ namespace Pkger{
                 url : String
             })
         }
+
+        pub def pinfogetname(p: PackageInfo): String = 
+            let PackageInfo(unwrap) = p;
+            unwrap.name
+        
+        pub def pinfogetversion(p: PackageInfo): SemVer = 
+            let PackageInfo(unwrap) = p;
+            unwrap.version
+
     }
 }

@@ -16,10 +16,6 @@
 use Pkger/PackageInfo.PackageInfo;
 use Pkger/PackageInfo.PackageInfo.PackageInfo;
 use Pkger/Examples.examplePackage1;
-/// use Pkger/Examples.examplePackage2;
-/// use Pkger/Examples.examplePackage3;
-/// use Pkger/Examples.examplePackage4;
-/// use Pkger/Examples.examplePackage5;
 use Pkger/SemVer.SemVer.SemVer;
 use Pkger/SemVer.SemVer;
 use Pkger/Author.Author;

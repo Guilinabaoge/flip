@@ -16,6 +16,7 @@
 
 use Pkger/PackageInfo.PackageInfo;
 use Pkger/PackageInfo.PackageInfo.PackageInfo;
+use Pkger/PackageInfo.pinfogetname;
 use Pkger/SemVer.SemVer.SemVer;
 use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
@@ -30,42 +31,6 @@ namespace Pkger{
                 edition = SemVer(0,14,6),
                 dependencies = PackageDependency({name = "MyPackageNameTwo",version = SemVer(2,0,0)}) :: Nil,
                 url = "Nil"})
-
-        /// pub def examplePackage2(): PackageInfo = 
-        ///         PackageInfo({
-        ///             name = "MyPackageNameTwo",
-        ///             version = SemVer(2,0,0), 
-        ///             authors = Author({name = "Jens", email = None, website = None}) :: Nil,
-        ///             edition = SemVer(0,14,6),
-        ///             dependencies = Nil,
-        ///             url = "Nil"})
-
-        /// pub def examplePackage3(): PackageInfo = 
-        ///         PackageInfo({
-        ///             name = "MyPackageNameThree",
-        ///             version = SemVer(3,0,0), 
-        ///             authors = Author({name = "Mathias", email = None, website = None}) :: Nil,
-        ///             edition = SemVer(0,14,6),
-        ///             dependencies = Nil,
-        ///             url = "Nil"})
-
-        /// pub def examplePackage4(): PackageInfo = 
-        ///         PackageInfo({
-        ///             name = "MyPackageNameFour",
-        ///             version = SemVer(4,0,0), 
-        ///             authors = Author({name = "Paul", email = None, website = None}) :: Nil,
-        ///             edition = SemVer(0,14,6),
-        ///             dependencies = Nil,
-        ///             url = "Nil"})
-
-        /// pub def examplePackage5(): PackageInfo = 
-        ///         PackageInfo({
-        ///             name = "MyPackageNameFive",
-        ///             version = SemVer(5,0,0), 
-        ///             authors = Author({name = "Simon", email = None, website = None}) :: Nil,
-        ///             edition = SemVer(0,14,6),
-        ///             dependencies = Nil,
-        ///             url = "Nil"})
 
         pub def crawler(): PackageInfo = 
             PackageInfo({
@@ -201,6 +166,23 @@ namespace Pkger{
                 dependencies = Nil,
                 url = "https://github.com/isaacs/json-stringify-safe"
             })
+
+        pub def fakeregister(): Result[Map[String,PackageInfo],String] = 
+            let crawler = crawler();
+            /// let bottleneckp = bottleneckp();
+            /// let cheerio = cheerio();
+            /// let cheerio_select = cheerio_select();
+            /// let css_select = css_select();
+            /// let css_what = css_what();
+            /// let entities = entities();
+            /// let boolbase = boolbase();
+            /// let request = request();
+            /// let caseless = caseless();
+            /// let extend = extend();
+            /// let json_stringify_safe = json_stringify_safe();
+            Ok(Map#{pinfogetname(crawler) -> crawler})
+
+
     }
 }
 
