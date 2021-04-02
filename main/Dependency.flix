@@ -39,6 +39,7 @@ namespace Pkger{
                 case (PackageDependency(x),PackageDependency(y)) => x.name <=> y.name
                 case _ => LessThan
             }
+            //TODO what am i doing here?
             pub def less(x:PackageDependency,y: PackageDependency): Bool = false
             pub def lessEqual(x:PackageDependency,y: PackageDependency): Bool = false
             pub def greater(x:PackageDependency,y: PackageDependency): Bool = false
@@ -46,8 +47,7 @@ namespace Pkger{
         }
 
         pub enum PackageDependency {
-            case PackageDependency({name: String, version : SemVer})  
-            //case FileDependency(String, String)  
+            case PackageDependency({name: String, version : SemVer})   
         }
 
         pub def getPackageName(pd: PackageDependency): String = 
