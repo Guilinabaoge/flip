@@ -30,13 +30,28 @@ namespace Pkger{
         instance ToString[PackageDependency] {
             def toString(x: PackageDependency): String = 
                 let PackageDependency(a1) = x;
-                let string = "name: ${a1.name}  version: ${a1.version}}";
+                let string = "{name: ${a1.name}  version: ${a1.version}}";
                 string
         } 
+
+        instance Order[PackageDependency] {
+            pub def compare(xs: PackageDependency, ys: PackageDependency): Comparison = match (xs,ys){
+                case (PackageDependency(x),PackageDependency(y)) => x.name <=> y.name
+                case _ => LessThan
+            }
+            pub def less(x:PackageDependency,y: PackageDependency): Bool = false
+            pub def lessEqual(x:PackageDependency,y: PackageDependency): Bool = false
+            pub def greater(x:PackageDependency,y: PackageDependency): Bool = false
+            pub def greaterEqual(x:PackageDependency,y: PackageDependency): Bool = false
+        }
 
         pub enum PackageDependency {
             case PackageDependency({name: String, version : SemVer})  
             //case FileDependency(String, String)  
         }
+
+        pub def getPackageName(pd: PackageDependency): String = 
+            let PackageDependency(x) = pd;
+            x.name
     }
 }

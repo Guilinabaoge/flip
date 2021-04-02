@@ -77,6 +77,10 @@ namespace Pkger{
         pub def pinfogetversion(p: PackageInfo): SemVer = 
             let PackageInfo(unwrap) = p;
             unwrap.version
+        
+        pub def pinfogetdependencies(p: PackageInfo): List[PackageDependency] = 
+            let PackageInfo(unwrap) = p;
+            unwrap.dependencies
 
     }
 }

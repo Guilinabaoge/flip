@@ -17,30 +17,53 @@
 
 use Pkger/PackageInfo.PackageInfo;
 use Pkger/PackageInfo.PackageInfo.PackageInfo;
-use Pkger/PackageInfo.{pinfogetname, pinfogetversion};
+use Pkger/PackageInfo.{pinfogetname, pinfogetversion,pinfogetdependencies};
 use Pkger/SemVer.SemVer.SemVer;
 use Pkger/SemVer.SemVer;
 use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
+use Pkger/Dependency.{PackageDependency,getPackageName};
+
 
 namespace Pkger{
     namespace ResolveDep{
-        pub def getFullDependencies(packagename: String, registry: Map[String,PackageInfo]): Result[{name: String, version: SemVer, url: String},String] & Impure= 
+        pub def getFullDependencies(registry: Map[String,PackageInfo],plist: List[PackageDependency],packagename: String): List[PackageDependency] & Impure= 
+            use Result.flatMap;
             let keys = Map.keysOf(registry);
             if (Set.memberOf(packagename,keys)) {
                 let packageinfo = match Map.get(packagename,registry){
                     case None => ???
                     case Some(x) => x
                 };
-                let pname = pinfogetname(packageinfo);
-                let pversion = pinfogetversion(packageinfo);
-                pname |> println;
-                pversion |> println;
-                Ok({name = pname, version = pversion, url = "test url"})
+                
+                let deplist = pinfogetdependencies(packageinfo);
+                if (deplist == Nil) {
+                    plist   
+                }
+                else {
+                    let newplist = deplist ::: plist;
+                    let depnames = List.map(getPackageName,deplist);
+                    let recurlist = List.map(getFullDependencies(registry,newplist),depnames);
+                    //TODO when you have a list of List[Result[A]] how can u turn it to List[A]?
+                    let result = List.flatten(recurlist);
+                    let set = List.toSet(result);
+                    Set.toList(set)  
+                }
             }
             else {
                 ???
+                //Err("package ${packagename} is not exist")
             }
+        
+        /// def getFullpathelper(registry: Map[String,PackageInfo], _deplist: List[PackageDependency],packagename: String): Result[List[PackageDependency],String] = 
+        ///     let keys = Map.keysOf(registry);
+        ///     if (Set.memberOf(packagename,keys)) {
+        ///         Ok(PackageDependency({name = "entities", version = SemVer(2,2,0)})::Nil)
+        ///     }
+        ///     else {
+        ///         Err("Package ${packagename} is not exist")
+        ///     }
+            
             
     }
 }

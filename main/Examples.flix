@@ -99,7 +99,7 @@ namespace Pkger{
                 authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")})::
                           Nil,
                 edition = SemVer(0,14,6),
-                dependencies = Nil,
+                dependencies = PackageDependency({name = "entities", version = SemVer(2,2,0)}) :: Nil,
                 url = "https://github.com/fb55/css-what"
 
             })
@@ -169,18 +169,29 @@ namespace Pkger{
 
         pub def fakeregister(): Result[Map[String,PackageInfo],String] = 
             let crawler = crawler();
-            /// let bottleneckp = bottleneckp();
-            /// let cheerio = cheerio();
-            /// let cheerio_select = cheerio_select();
-            /// let css_select = css_select();
-            /// let css_what = css_what();
-            /// let entities = entities();
-            /// let boolbase = boolbase();
-            /// let request = request();
-            /// let caseless = caseless();
-            /// let extend = extend();
-            /// let json_stringify_safe = json_stringify_safe();
-            Ok(Map#{pinfogetname(crawler) -> crawler})
+            let bottleneckp = bottleneckp();
+            let cheerio = cheerio();
+            let cheerio_select = cheerio_select();
+            let css_select = css_select();
+            let css_what = css_what();
+            let entities = entities();
+            let boolbase = boolbase();
+            let request = request();
+            let caseless = caseless();
+            let extend = extend();
+            let json_stringify_safe = json_stringify_safe();
+            Ok(Map#{pinfogetname(crawler) -> crawler,
+                    pinfogetname(css_what) -> css_what,
+                    pinfogetname(bottleneckp) -> bottleneckp,
+                    pinfogetname(cheerio) -> cheerio,
+                    pinfogetname(cheerio_select) -> cheerio_select,
+                    pinfogetname(entities) -> entities,
+                    pinfogetname(css_select) -> css_select,
+                    pinfogetname(boolbase) -> boolbase,
+                    pinfogetname(request) -> request,
+                    pinfogetname(caseless) -> caseless,
+                    pinfogetname(extend) -> extend,
+                    pinfogetname(json_stringify_safe) -> json_stringify_safe})
 
 
     }

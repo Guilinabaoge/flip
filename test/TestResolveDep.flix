@@ -30,9 +30,24 @@ use Pkger/JSON.JSON.JArray;
 use Pkger/Examples.{fakeregister};
 use Pkger/ResolveDep.{getFullDependencies};
     @test 
-    def testResolveDep01(): Bool & Impure =
+    def testResolveDep01(): Bool & Impure=
     use Result.flatMap;
         match fakeregister(){
-            case Ok(x) => getFullDependencies("crawler",x); true
+            case Ok(x) => getFullDependencies(x,Nil,"entities") == Nil
             case Err(_) => false
         }
+    
+    @test 
+    def testResolveDep02(): Bool & Impure=
+    use Result.flatMap;
+        match fakeregister(){
+            case Ok(x) => 
+            getFullDependencies(x,Nil,"css-select") |> println;
+            getFullDependencies(x,Nil,"css-select") == 
+                PackageDependency({name = "boolbase", version = SemVer(1,0,0)})::
+                   PackageDependency({name = "css-what", version = SemVer(5,0,0)})::
+                   PackageDependency({name = "entities", version = SemVer(2,2,0)})::Nil
+            case Err(_) => false
+        }
+    
+  
