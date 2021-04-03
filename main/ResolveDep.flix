@@ -27,12 +27,16 @@ use Pkger/Dependency.{PackageDependency,getPackageName};
 
 namespace Pkger{
     namespace ResolveDep{
+
+        //
+        // check if the package exist in the registry, if it exist get it's dependencies and subdependencies 
+        //
         pub def getFullDependencies(registry: Map[String,PackageInfo],plist: List[PackageDependency],packagename: String): List[PackageDependency] & Impure= 
             use Result.flatMap;
             let keys = Map.keysOf(registry);
             if (Set.memberOf(packagename,keys)) {
                 let packageinfo = match Map.get(packagename,registry){
-                    case None => ???
+                    case None => ??? //TODO is there a way to return an error here? since the packageinfo is not in the map
                     case Some(x) => x
                 };
                 
@@ -53,17 +57,7 @@ namespace Pkger{
             else {
                 ???
                 //Err("package ${packagename} is not exist")
-            }
-        
-        /// def getFullpathelper(registry: Map[String,PackageInfo], _deplist: List[PackageDependency],packagename: String): Result[List[PackageDependency],String] = 
-        ///     let keys = Map.keysOf(registry);
-        ///     if (Set.memberOf(packagename,keys)) {
-        ///         Ok(PackageDependency({name = "entities", version = SemVer(2,2,0)})::Nil)
-        ///     }
-        ///     else {
-        ///         Err("Package ${packagename} is not exist")
-        ///     }
-            
+            }            
             
     }
 }
