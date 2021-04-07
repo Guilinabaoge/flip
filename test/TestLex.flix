@@ -27,12 +27,12 @@ use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
 use Pkger/Dependency.PackageDependency;
 use Pkger/Lex.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPackageInfo,lex,parseWrapper};
-
+namespace Lex{
     /////////////////////////////////////////////////////////////////////////////
     // prettyprint                                                             //
     /////////////////////////////////////////////////////////////////////////////
     @test
-    def testJSON01(): Bool = 
+    def testLex01(): Bool = 
         //let a = examplePackage1();
         //stringifyPackageInfo(a) |> println;
         //let b = examplePackage2();
@@ -88,7 +88,7 @@ use Pkger/Lex.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPac
         let expectedtokens : List[String] = "{" :: "}":: Nil;
         tokens == expectedtokens 
 
-
+}
 
    
     

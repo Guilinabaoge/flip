@@ -29,6 +29,8 @@ use Pkger/JSON.JSON.JString;
 use Pkger/JSON.JSON.JArray;
 use Pkger/Examples.{fakeregister};
 use Pkger/ResolveDep.{getFullDependencies};
+
+namespace ResolveDep{
     @test 
     def testResolveDep01(): Bool & Impure=
     use Result.flatMap;
@@ -70,5 +72,5 @@ use Pkger/ResolveDep.{getFullDependencies};
                 PackageDependency({name = "json-stringify-safe", version = SemVer(5,0,1)}) ::Nil
             case Err(_) => false
         }
-    
+}
   

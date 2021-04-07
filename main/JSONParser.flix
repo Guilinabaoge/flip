@@ -180,6 +180,9 @@ namespace Pkger{
                 }
             }
         
+        //
+        //give string "(x,y,z)" return tuple (x,y,z)
+        //
         def parseTokens(tokens: List[String]): Result[(Int32,Int32,Int32),String] & Impure= 
             let intstring = List.map(Int32.fromString,tokens);
             let major1 = List.head(intstring);

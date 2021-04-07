@@ -27,7 +27,7 @@ use Pkger/JSONParser.{parse,json2author,jstring2string,jstring2Semver,json2Depen
 use Pkger/JSON.JSON.JObject;
 use Pkger/JSON.JSON.JString;
 use Pkger/JSON.JSON.JArray;
-    
+namespace JSONParser{
     @test 
     def testCombi01(): Bool & Impure = 
         use Result.flatMap;
@@ -189,6 +189,6 @@ use Pkger/JSON.JSON.JArray;
         true 
 
     
-        
+}    
 
     
