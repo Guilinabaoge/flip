@@ -45,6 +45,7 @@ namespace Pkger{
                     plist   
                 }
                 else {
+                    // newplist is the dependencies of the current package, for each of the dependented package call getFullDependencies to get their dependencies recursively 
                     let newplist = deplist ::: plist;
                     let depnames = List.map(getPackageName,deplist);
                     let recurlist = List.map(getFullDependencies(registry,newplist),depnames);

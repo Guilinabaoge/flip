@@ -38,9 +38,10 @@ use Core/Io/ZipOutput.ZipOutput.ZipOutput;
 
 
 instance ToString[IOError]{
-    def toString(x: IOError): String = match x {
+    pub def toString(x: IOError): String = match x {
         //case IOError.ElementNotFound(String) => "ElementNotFound"
         case IOError.MalformedZip => "MalformedZip" 
+        case _ => "unkonw error"
 
     }}
 

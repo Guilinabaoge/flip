@@ -86,16 +86,20 @@ namespace Pkger{
                     let jauthor = Map.get("authors",o);
                     let jedition = Map.get("edition",o);
                     let jdependencies = Map.get("dependencies",o);
-                    let jurl = Map.get("url",o);
+                    let jurl = Map.get("url",o); 
                     match (jname,jversion,jauthor,jedition,jdependencies,jurl){
                         case (Some(JString(pname)),Some(JString(pversion)),Some(JArray(pauthor)),Some(JString(pedition)),Some(JArray(pdependencies)),Some(JString(purl))) =>
                         let* pversion2 = jstring2Semver(JString(pversion));
                         let* pedition2 = jstring2Semver(JString(pedition));
-                        Ok(PackageInfo({name = pname, version = pversion2, authors = Author({name = "hohoho", email = None, website = None})::Nil, edition = pedition2,
-                        dependencies = PackageDependency({name = "ho", version = SemVer(1,2,3)})::Nil, url = purl }))
-                        case (_) => Err("Hi")
+                        let pauthor2 = List.map(json2author,pauthor);
+                        let* pauthor3 = Result.sequence(pauthor2);
+                        let pdependencies2 = List.map(json2Dependency,pdependencies);
+                        let* pdependencies3 = Result.sequence(pdependencies2);
+                        Ok(PackageInfo({name = pname, version = pversion2, authors = pauthor3, edition = pedition2,
+                        dependencies = pdependencies3, url = purl }))
+                        case (_) => Err("Invalid packageinfo")
                     }
-            case _ => ???
+            case _ => Err("must be jobjcet")
 
             }
         
@@ -110,7 +114,7 @@ namespace Pkger{
                         let* sem = jstring2Semver(JString(realdepversion));
                         Ok(PackageDependency({name = realdepname, version = sem}))
                     case (Some(_),Some(_)) => "Hi" |> println; Err("Hi")
-                    case (_,_) => Err("???")
+                    case (_,_) => Err("missing Dep name or version")
                 }
             case JArray(_) => Err("unexpect Array") 
             case JString(_) => Err("unexpect String")
@@ -154,8 +158,10 @@ namespace Pkger{
             case JArray(_) => Err("Unexpected JArray")
         }
 
-        def getVersion(s: List[Char],tokens: List[String]): Result[(Int32,Int32,Int32),String] & Impure= 
-            //s |> println;
+        //
+        // turn Semver string "(major,minor,patch)" -> (major.minor,patch)
+        //
+        def getVersion(s: List[Char],tokens: List[String]): Result[(Int32,Int32,Int32),String] & Impure = 
             match s {
                 case Nil => let reverse = List.reverse(tokens); parseTokens(reverse)
                 case n::rest => match n {
@@ -166,6 +172,9 @@ namespace Pkger{
                               getVersion(rest2,newtoken)
                 }
             }
+        //
+        // TODO merge into Lex later 
+        //
         def parse2digits(s: List[Char],num: String): (String,List[Char]) & Impure= 
             match s {
                 case Nil => ???

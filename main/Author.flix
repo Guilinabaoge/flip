@@ -23,11 +23,10 @@ namespace Pkger{
                 a1.name == a2.name and 
                 a1.email == a2.email and 
                 a1.website == a2.website
-            pub def neq(x:Author, y:Author) : Bool = false 
         }   
 
         instance ToString[Author] {
-            def toString(x: Author): String = 
+            pub def toString(x: Author): String = 
                 let Author(a1) = x;
                 let string = "name: ${a1.name}  email: ${a1.email} website: ${a1.website}";
                 string

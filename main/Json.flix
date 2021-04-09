@@ -19,15 +19,16 @@ namespace Pkger{
             pub def eq(x: JSON, y: JSON): Bool = match (x,y){
                 case (JObject(a),JObject(b)) => a == b
                 case (JString(a),JString(b)) => a == b 
+                case (JArray(a),JArray(b)) => a == b
+                case _ => false
             }
-            pub def neq(x: JSON, y: JSON): Bool = ???
         }
 
         instance ToString[JSON]{
             pub def toString(x: JSON): String = match x {
                 case JString(s) => s
-                case JObject(x) => Int32.toString(Map.count((k,b)->true,x))   // map tostring?
-                case JArray(a) => let arraylengh = Int32.toString(List.length(a)); "Array with length ${arraylengh}"
+                case JObject(o) => ToString.toString(o)//Int32.toString(Map.count((k,b)->true,x))   // map tostring?
+                case JArray(a) => ToString.toString(a)//let arraylengh = Int32.toString(List.length(a)); "Array with length ${arraylengh}"
             }
         }
         pub enum JSON{

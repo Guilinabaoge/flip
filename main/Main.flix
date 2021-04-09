@@ -32,16 +32,17 @@ enum Flag {
 
 
 instance ToString[Flag]{
-    def toString(x: Flag): String = match x {
+    pub def toString(x: Flag): String = match x {
         case Version => "Version"
+        case _ => "not a flag"
     }}
 
 instance Eq[Flag]{
-    def eq(x: Flag, y: Flag): Bool = match (x,y){
+    pub def eq(x: Flag, y: Flag): Bool = match (x,y){
         case (Version, Version) => true
-        //case (Help,Help) => true
+        case (_,_) => false
     }
-    def neq(x:Flag, y:Flag) : Bool = false
+    
 }
 def options(): List[OptionDescr[Flag]] = 
     {optionIds = 'v' :: Nil, optionNames = "Version" :: Nil, argDescriptor = NoArg(Version), explanation = "prints the version number"} ::

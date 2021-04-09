@@ -25,7 +25,6 @@
                 b1 == b2 and 
                 c1 == c2
             }
-            pub def neq(x:SemVer,y: SemVer): Bool = false
         }
 
         instance ToString[SemVer]{

@@ -95,13 +95,22 @@ namespace Pkger{
             let edition = stringifySemver(package1.edition);
             let dependencies = stringifyDependency(package1.dependencies);
             let url = package1.url;
+            /// let quote = Char.toString('"');
+            /// let seperator = String.lineSeparator();
             
-            let packageInfoString = Char.toString('"')+"name"+Char.toString('"') + ":" + Char.toString('"')+name+Char.toString('"') + "," + String.lineSeparator()+
+            let packageInfoString = 
+                                    Char.toString('"')+"name"+Char.toString('"') + ":" + Char.toString('"')+name+Char.toString('"') + "," + String.lineSeparator()+
                                     Char.toString('"')+"version"+Char.toString('"') + ":" + Char.toString('"')+version+Char.toString('"') + "," +String.lineSeparator()+
                                     Char.toString('"')+"authors"+Char.toString('"') + ":" + "["+authors+"]" + "," +String.lineSeparator()+
                                     Char.toString('"')+"edition"+Char.toString('"') + ":" + Char.toString('"')+edition+Char.toString('"') + "," +String.lineSeparator()+
                                     Char.toString('"')+"dependencies"+Char.toString('"') + ":" + "["+dependencies+"]" + "," +String.lineSeparator()+
                                     Char.toString('"')+"url"+Char.toString('"') + ":" + Char.toString('"')+url+Char.toString('"');
+                                    /// "${quote}name${quote}:${quote}${name}${quote},${seperator}
+                                    ///     ${quote}version${quote}:${quote}${version}${quote},${seperator}
+                                    ///     ${quote}authors${quote}:[${}],${seperator}
+                                    ///     ${quote}edition${quote}:${quote}${edition}${quote},${seperator}
+                                    ///     ${quote}dependencies${quote}:[${dependencies}],${seperator}
+                                    ///     ${quote}url${quote}:${quote}${url}${quote},${seperator}";
             let indentString = String.indent(3,packageInfoString);
             let finalPretty = "{" + String.lineSeparator() + indentString + String.lineSeparator()+ "}" ;
             finalPretty

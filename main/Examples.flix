@@ -44,6 +44,18 @@ namespace Pkger{
                 url = "https://github.com/bda-research/node-crawler"
             })
         
+         pub def crawler2(): PackageInfo = 
+            PackageInfo({
+                name = "crawler",
+                version = SemVer(2,0,0),
+                authors = Author({name = "jack",email = None, website = None}) :: Author({name = "paulvalla", email = None, website = Some("https://github.com/paulvalla")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = 
+                               PackageDependency({name = "cheerio", version = SemVer(2,0,0)}) ::
+                               PackageDependency({name = "request", version = SemVer(2,88,2)}) :: Nil,
+                url = "https://github.com/bda-research/node-crawler"
+            })
+        
         pub def bottleneckp(): PackageInfo = 
             PackageInfo({
                 name = "bottleneckp",
@@ -168,6 +180,7 @@ namespace Pkger{
             })
 
         pub def fakeregister(): Result[Map[String,PackageInfo],String] = 
+        // TODO how to do Map[String,List[PackageInfo]]
             let crawler = crawler();
             let bottleneckp = bottleneckp();
             let cheerio = cheerio();

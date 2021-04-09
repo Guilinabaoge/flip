@@ -18,16 +18,16 @@
 use Core/Io/File.{new => newFile};
 use Pkger/SemVer.SemVer.SemVer;
 use Pkger/SemVer.lessEqual;
-namespace Pkger {
+namespace Pkger/SemVer {
 
-    /////////////////////////////////////////////////////////////////////////////
-    // initProject                                                             //
-    /////////////////////////////////////////////////////////////////////////////
+    /// /////////////////////////////////////////////////////////////////////////////
+    /// // initProject                                                             //
+    /// /////////////////////////////////////////////////////////////////////////////
 
-    @test
-    def testInitProject01(): Bool & Impure = 
-        initProject(newFile("abc"));     
-        true
+    /// @test
+    /// def testInitProject01(): Bool & Impure = 
+    ///     initProject(newFile("abc"));     
+    ///     true
 
     /////////////////////////////////////////////////////////////////////////////
     //  lessEqual                                                              //

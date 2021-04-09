@@ -24,11 +24,10 @@ namespace Pkger{
                 p1.name == p2.name and 
                 p1.version == p2.version
             }
-            pub def neq(x:PackageDependency,y: PackageDependency): Bool = false
         }
 
         instance ToString[PackageDependency] {
-            def toString(x: PackageDependency): String = 
+            pub def toString(x: PackageDependency): String = 
                 let PackageDependency(a1) = x;
                 let string = "{name: ${a1.name}  version: ${a1.version}}";
                 string
@@ -39,15 +38,10 @@ namespace Pkger{
                 case (PackageDependency(x),PackageDependency(y)) => x.name <=> y.name
                 case _ => LessThan
             }
-            //TODO what am i doing here?
-            pub def less(x:PackageDependency,y: PackageDependency): Bool = false
-            pub def lessEqual(x:PackageDependency,y: PackageDependency): Bool = false
-            pub def greater(x:PackageDependency,y: PackageDependency): Bool = false
-            pub def greaterEqual(x:PackageDependency,y: PackageDependency): Bool = false
         }
 
         pub enum PackageDependency {
-            case PackageDependency({name: String, version : SemVer})   
+            case PackageDependency({name: String, version : SemVer})   //, maxversion: Option[SemVer]
         }
 
         pub def getPackageName(pd: PackageDependency): String = 

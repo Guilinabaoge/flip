@@ -27,7 +27,7 @@ use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
 use Pkger/Dependency.PackageDependency;
 use Pkger/Lex.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPackageInfo,lex,parseWrapper};
-namespace Lex{
+namespace Pkger/Lex{
     /////////////////////////////////////////////////////////////////////////////
     // prettyprint                                                             //
     /////////////////////////////////////////////////////////////////////////////

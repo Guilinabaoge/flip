@@ -32,13 +32,10 @@ namespace Pkger{
                 p1.authors == p2.authors and 
                 p1.edition == p2.edition and 
                 p1.dependencies == p2.dependencies 
-                
-
-            pub def neq(x:PackageInfo, y:PackageInfo) : Bool = false
         }   
 
         instance ToString[PackageInfo] {
-            def toString(x: PackageInfo): String = 
+            pub def toString(x: PackageInfo): String = 
                 let PackageInfo(package1) = x;
                 let name = package1.name;
                 let version = stringifySemver(package1.version);
@@ -46,7 +43,8 @@ namespace Pkger{
                 let edition = stringifySemver(package1.edition);
                 let dependencies = stringifyDependency(package1.dependencies);
                 let url = package1.url;
-                let quote = Char.toString('"');
+                /// let quote = Char.toString('"');
+                /// let seperator = String.lineSeparator();
                 //TODO ugly code 
                 let packageInfoString = Char.toString('"')+"name"+Char.toString('"') + ":" + Char.toString('"')+name+Char.toString('"') + "," + String.lineSeparator()+
                                         Char.toString('"')+"version"+Char.toString('"') + ":" + Char.toString('"')+version+Char.toString('"') + "," +String.lineSeparator()+
@@ -54,6 +52,12 @@ namespace Pkger{
                                         Char.toString('"')+"edition"+Char.toString('"') + ":" + Char.toString('"')+edition+Char.toString('"') + "," +String.lineSeparator()+
                                         Char.toString('"')+"dependencies"+Char.toString('"') + ":" + "["+dependencies+"]" + "," +String.lineSeparator()+
                                         Char.toString('"')+"url"+Char.toString('"') + ":" + Char.toString('"')+url+Char.toString('"');
+                                        /// "${quote}name${quote}:${quote}${name}${quote},${seperator}
+                                        /// ${quote}version${quote}:${quote}${version}${quote},${seperator}
+                                        /// ${quote}authors${quote}:[${}],${seperator}
+                                        /// ${quote}edition${quote}:${quote}${edition}${quote},${seperator}
+                                        /// ${quote}dependencies${quote}:[${dependencies}],${seperator}
+                                        /// ${quote}url${quote}:${quote}${url}${quote},${seperator}";
                                         
                 packageInfoString
         } 

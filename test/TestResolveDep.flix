@@ -30,7 +30,7 @@ use Pkger/JSON.JSON.JArray;
 use Pkger/Examples.{fakeregister};
 use Pkger/ResolveDep.{getFullDependencies};
 
-namespace ResolveDep{
+namespace Pkger/ResolveDep{
     @test 
     def testResolveDep01(): Bool & Impure=
     use Result.flatMap;
@@ -44,11 +44,11 @@ namespace ResolveDep{
     use Result.flatMap;
         match fakeregister(){
             case Ok(x) => 
-            getFullDependencies(x,Nil,"css-select") |> println;
-            getFullDependencies(x,Nil,"css-select") == 
-                PackageDependency({name = "boolbase", version = SemVer(1,0,0)})::
-                   PackageDependency({name = "css-what", version = SemVer(5,0,0)})::
-                   PackageDependency({name = "entities", version = SemVer(2,2,0)})::Nil
+            let set = List.toSet(getFullDependencies(x,Nil,"css-select"));
+            let expectset = Set#{PackageDependency({name = "boolbase", version = SemVer(1,0,0)}),
+                                PackageDependency({name = "css-what", version = SemVer(5,0,0)}),
+                                PackageDependency({name = "entities", version = SemVer(2,2,0)})};
+            set == expectset
             case Err(_) => false
         }
     
@@ -57,19 +57,21 @@ namespace ResolveDep{
     use Result.flatMap;
         match fakeregister(){
             case Ok(x) => 
-            getFullDependencies(x,Nil,"crawler") |> println;
-            getFullDependencies(x,Nil,"crawler") == 
-                PackageDependency({name = "bottleneckp", version = SemVer(1,1,3)})::
-                PackageDependency({name = "cheerio", version = SemVer(1,0,0)})::
-                PackageDependency({name = "cheerio-select", version = SemVer(0,1,1)})::
-                PackageDependency({name = "css-select", version = SemVer(3,1,2)}) :: 
-                PackageDependency({name = "boolbase", version = SemVer(1,0,0)}) :: 
-                PackageDependency({name = "css-what", version = SemVer(5,0,0)}) ::
-                PackageDependency({name = "entities", version = SemVer(2,2,0)})::
-                PackageDependency({name = "request", version = SemVer(2,88,2)})::
-                PackageDependency({name = "caseless", version = SemVer(0,12,0)})::
-                PackageDependency({name = "extend", version = SemVer(3,0,2)})::
-                PackageDependency({name = "json-stringify-safe", version = SemVer(5,0,1)}) ::Nil
+            let set = List.toSet(getFullDependencies(x,Nil,"crawler"));
+            let expectset = Set#{
+                PackageDependency({name = "bottleneckp", version = SemVer(1,1,3)}),
+                PackageDependency({name = "cheerio", version = SemVer(1,0,0)}),
+                PackageDependency({name = "cheerio-select", version = SemVer(0,1,1)}),
+                PackageDependency({name = "css-select", version = SemVer(3,1,2)}),
+                PackageDependency({name = "boolbase", version = SemVer(1,0,0)}),
+                PackageDependency({name = "css-what", version = SemVer(5,0,0)}),
+                PackageDependency({name = "entities", version = SemVer(2,2,0)}),
+                PackageDependency({name = "request", version = SemVer(2,88,2)}),
+                PackageDependency({name = "caseless", version = SemVer(0,12,0)}),
+                PackageDependency({name = "extend", version = SemVer(3,0,2)}),
+                PackageDependency({name = "json-stringify-safe", version = SemVer(5,0,1)})
+            };
+            set == expectset
             case Err(_) => false
         }
 }

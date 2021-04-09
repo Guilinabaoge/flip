@@ -27,7 +27,8 @@ use Pkger/JSONParser.{parse,json2author,jstring2string,jstring2Semver,json2Depen
 use Pkger/JSON.JSON.JObject;
 use Pkger/JSON.JSON.JString;
 use Pkger/JSON.JSON.JArray;
-namespace JSONParser{
+
+namespace Pkger/JSONParser{
     @test 
     def testCombi01(): Bool & Impure = 
         use Result.flatMap;
@@ -163,7 +164,7 @@ namespace JSONParser{
     def testJson2PackageInfo(): Bool & Impure= 
     use Result.flatMap;
         let authorsmap = JArray(JObject(Map#{"name"->JString("Peter"),"email"->JString("None"),"website"->JString("None")})::Nil);
-        let dependenciesmap = JArray(JObject(Map#{"packagename"->JString("MyPackageNameTwo"), "packageversion" -> JString("(2,0,0)")})::Nil);
+        let dependenciesmap = JArray(JObject(Map#{"name"->JString("MyPackageNameTwo"), "version" -> JString("(2,0,0)")})::Nil);
         let testinput = JObject(Map#{"name"->JString("MyPackageNameOne"), "version" -> JString("(1,0,0)"), "authors"->authorsmap, "edition" -> JString("(0,4,6)"),
         "dependencies" -> dependenciesmap, "url" -> JString("Nil")});
         let expect = PackageInfo({
@@ -174,12 +175,11 @@ namespace JSONParser{
                 dependencies = PackageDependency({name = "MyPackageNameTwo",version = SemVer(2,0,0)}) :: Nil,
                 url = "Nil"});
         match json2PackageInfo(testinput){
-            case Ok(x) => let PackageInfo(_x1) = x;
-                /// x1.authors|> println; 
-                /// expect |> println; 
-                //TODO this test should be fail 
+            case Ok(x) => 
+                let PackageInfo(_x1) = x;
                 x == expect
-            case Err(_) => false
+            case Err(_) => 
+                false
         }
     
     @test 
