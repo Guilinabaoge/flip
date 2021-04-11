@@ -45,9 +45,9 @@ namespace Pkger/ResolveDep{
         match fakeregister(){
             case Ok(x) => 
             let set = List.toSet(getFullDependencies(x,Nil,"css-select"));
-            let expectset = Set#{PackageDependency({name = "boolbase", version = SemVer(1,0,0)}),
-                                PackageDependency({name = "css-what", version = SemVer(5,0,0)}),
-                                PackageDependency({name = "entities", version = SemVer(2,2,0)})};
+            let expectset = Set#{PackageDependency({name = "boolbase", version = SemVer(1,0,0),maxversion = None}),
+                                PackageDependency({name = "css-what", version = SemVer(5,0,0),maxversion = None}),
+                                PackageDependency({name = "entities", version = SemVer(2,2,0),maxversion = None})};
             set == expectset
             case Err(_) => false
         }
@@ -59,17 +59,17 @@ namespace Pkger/ResolveDep{
             case Ok(x) => 
             let set = List.toSet(getFullDependencies(x,Nil,"crawler"));
             let expectset = Set#{
-                PackageDependency({name = "bottleneckp", version = SemVer(1,1,3)}),
-                PackageDependency({name = "cheerio", version = SemVer(1,0,0)}),
-                PackageDependency({name = "cheerio-select", version = SemVer(0,1,1)}),
-                PackageDependency({name = "css-select", version = SemVer(3,1,2)}),
-                PackageDependency({name = "boolbase", version = SemVer(1,0,0)}),
-                PackageDependency({name = "css-what", version = SemVer(5,0,0)}),
-                PackageDependency({name = "entities", version = SemVer(2,2,0)}),
-                PackageDependency({name = "request", version = SemVer(2,88,2)}),
-                PackageDependency({name = "caseless", version = SemVer(0,12,0)}),
-                PackageDependency({name = "extend", version = SemVer(3,0,2)}),
-                PackageDependency({name = "json-stringify-safe", version = SemVer(5,0,1)})
+                PackageDependency({name = "bottleneckp", version = SemVer(1,1,3),maxversion = None}),
+                PackageDependency({name = "cheerio", version = SemVer(1,0,0),maxversion = None}),
+                PackageDependency({name = "cheerio-select", version = SemVer(0,1,1),maxversion = None}),
+                PackageDependency({name = "css-select", version = SemVer(3,1,2),maxversion = None}),
+                PackageDependency({name = "boolbase", version = SemVer(1,0,0),maxversion = None}),
+                PackageDependency({name = "css-what", version = SemVer(5,0,0),maxversion = None}),
+                PackageDependency({name = "entities", version = SemVer(2,2,0),maxversion = None}),
+                PackageDependency({name = "request", version = SemVer(2,88,2),maxversion = None}),
+                PackageDependency({name = "caseless", version = SemVer(0,12,0),maxversion = None}),
+                PackageDependency({name = "extend", version = SemVer(3,0,2),maxversion = None}),
+                PackageDependency({name = "json-stringify-safe", version = SemVer(5,0,1),maxversion = None})
             };
             set == expectset
             case Err(_) => false

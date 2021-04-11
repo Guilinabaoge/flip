@@ -158,9 +158,15 @@ namespace Pkger{
             let PackageDependency(packageRecord) = a;
             let name = packageRecord.name;
             let version = stringifySemver(packageRecord.version);
+            let maxversion = match packageRecord.maxversion {
+                case None => "None"
+                case Some(y) => stringifySemver(y)
+            };
             let dependency = 
-                String.lineSeparator()+Char.toString('"')+"packagename"+Char.toString('"') + ":" + Char.toString('"')+name+Char.toString('"')+"," + 
-                String.lineSeparator()+Char.toString('"')+"packagversion"+Char.toString('"') + ":" + Char.toString('"')+version+Char.toString('"');
+                String.lineSeparator()+Char.toString('"')+"name"+Char.toString('"') + ":" + Char.toString('"')+name+Char.toString('"')+"," + 
+                String.lineSeparator()+Char.toString('"')+"version"+Char.toString('"') + ":" + Char.toString('"')+version+Char.toString('"') + 
+                String.lineSeparator()+Char.toString('"')+"maxversion"+Char.toString('"') + ":" + Char.toString('"')+maxversion+Char.toString('"')+",";
+                
             let dependencyIndent = "{"+String.indent(3,dependency)+"}";
             dependencyIndent
 

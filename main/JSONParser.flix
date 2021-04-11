@@ -91,11 +91,19 @@ namespace Pkger{
                         case (Some(JString(pname)),Some(JString(pversion)),Some(JArray(pauthor)),Some(JString(pedition)),Some(JArray(pdependencies)),Some(JString(purl))) =>
                         let* pversion2 = jstring2Semver(JString(pversion));
                         let* pedition2 = jstring2Semver(JString(pedition));
+                        let pversion3 = match pversion2{
+                            case None => SemVer(1,2,3)
+                            case Some(x) => x
+                        };
+                        let pedition3 = match pedition2{
+                            case None => SemVer(1,2,3)
+                            case Some(x) => x
+                        };
                         let pauthor2 = List.map(json2author,pauthor);
                         let* pauthor3 = Result.sequence(pauthor2);
                         let pdependencies2 = List.map(json2Dependency,pdependencies);
                         let* pdependencies3 = Result.sequence(pdependencies2);
-                        Ok(PackageInfo({name = pname, version = pversion2, authors = pauthor3, edition = pedition2,
+                        Ok(PackageInfo({name = pname, version = pversion3, authors = pauthor3, edition = pedition3,
                         dependencies = pdependencies3, url = purl }))
                         case (_) => Err("Invalid packageinfo")
                     }
@@ -109,12 +117,19 @@ namespace Pkger{
             case JObject(o) => 
                 let depName = Map.get("name",o);
                 let depVersion = Map.get("version",o);
-                match (depName,depVersion) {
-                    case (Some(JString(realdepname)),Some(JString(realdepversion))) => 
+                let depMaxVersion = Map.get("maxversion",o);
+                match (depName,depVersion,depMaxVersion) {
+                    case (Some(JString(realdepname)),Some(JString(realdepversion)),Some(JString(realmaxversion))) => 
+                        realmaxversion |> println;
                         let* sem = jstring2Semver(JString(realdepversion));
-                        Ok(PackageDependency({name = realdepname, version = sem}))
-                    case (Some(_),Some(_)) => "Hi" |> println; Err("Hi")
-                    case (_,_) => Err("missing Dep name or version")
+                        let sem2 = match sem {
+                            case None => SemVer(1,2,3)
+                            case Some(x) => x
+                        };
+                        let* maxsem = jstring2Semver(JString(realmaxversion));
+                        Ok(PackageDependency({name = realdepname, version = sem2,maxversion = maxsem}))
+                    case (Some(_),Some(_),Some(_)) => "Hi" |> println; Err("Hi")
+                    case (_,_,_) => Err("missing Dep name or version")
                 }
             case JArray(_) => Err("unexpect Array") 
             case JString(_) => Err("unexpect String")
@@ -149,11 +164,18 @@ namespace Pkger{
             case JArray(_) => Err("Unexpected JArray")
         }
 
-        pub def jstring2Semver(j: JSON): Result[SemVer,String] & Impure= 
+        pub def jstring2Semver(j: JSON): Result[Option[SemVer],String] & Impure= 
         use Result.flatMap; 
         match j {
-           case JString(s) => let* (major,minor,patch) = getVersion(String.toList(s),Nil);
-                             Ok(SemVer(major,minor,patch))
+           case JString(s) => 
+                            if (s == "None") {
+                                Ok(None)
+                            }
+                            else {
+                                let* (major,minor,patch) = getVersion(String.toList(s),Nil);
+                                Ok(Some(SemVer(major,minor,patch)))
+                            }
+                            
             case JObject(_) => Err("Unexpected JObject")
             case JArray(_) => Err("Unexpected JArray")
         }

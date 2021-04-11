@@ -29,7 +29,7 @@ namespace Pkger{
                 version = SemVer(1,0,0), 
                 authors = Author({name = "Peter", email = None, website = None}) :: Nil,
                 edition = SemVer(0,14,6),
-                dependencies = PackageDependency({name = "MyPackageNameTwo",version = SemVer(2,0,0)}) :: Nil,
+                dependencies = PackageDependency({name = "MyPackageNameTwo",version = SemVer(2,0,0), maxversion = Some(SemVer(3,0,0))}) :: Nil,
                 url = "Nil"})
 
         pub def crawler(): PackageInfo = 
@@ -38,9 +38,9 @@ namespace Pkger{
                 version = SemVer(1,3,0),
                 authors = Author({name = "sylvinus",email = None, website = None}) :: Author({name = "paulvalla", email = None, website = Some("https://github.com/paulvalla")}) :: Nil,
                 edition = SemVer(0,14,6),
-                dependencies = PackageDependency({name = "bottleneckp", version = SemVer(1,1,3)})::
-                               PackageDependency({name = "cheerio", version = SemVer(1,0,0)}) ::
-                               PackageDependency({name = "request", version = SemVer(2,88,2)}) :: Nil,
+                dependencies = PackageDependency({name = "bottleneckp", version = SemVer(1,1,3),maxversion = None})::
+                               PackageDependency({name = "cheerio", version = SemVer(1,0,0),maxversion = None}) ::
+                               PackageDependency({name = "request", version = SemVer(2,88,2),maxversion = None}) :: Nil,
                 url = "https://github.com/bda-research/node-crawler"
             })
         
@@ -51,8 +51,8 @@ namespace Pkger{
                 authors = Author({name = "jack",email = None, website = None}) :: Author({name = "paulvalla", email = None, website = Some("https://github.com/paulvalla")}) :: Nil,
                 edition = SemVer(0,14,6),
                 dependencies = 
-                               PackageDependency({name = "cheerio", version = SemVer(2,0,0)}) ::
-                               PackageDependency({name = "request", version = SemVer(2,88,2)}) :: Nil,
+                               PackageDependency({name = "cheerio", version = SemVer(2,0,0),maxversion = None}) ::
+                               PackageDependency({name = "request", version = SemVer(2,88,2),maxversion = None}) :: Nil,
                 url = "https://github.com/bda-research/node-crawler"
             })
         
@@ -74,8 +74,8 @@ namespace Pkger{
                 authors = Author({name = "mattmueller", email = None, website = None}) ::
                           Author({name = "davidchambers", email = None, website = Some("https://github.com/davidchambers")})::Nil,
                 edition = SemVer(0,14,6),
-                dependencies = PackageDependency({name = "cheerio-select", version = SemVer(0,1,1)})::
-                               PackageDependency({name = "entities", version = SemVer(2,2,0)})::Nil,
+                dependencies = PackageDependency({name = "cheerio-select", version = SemVer(0,1,1),maxversion = None})::
+                               PackageDependency({name = "entities", version = SemVer(2,2,0),maxversion = None})::Nil,
                 url = "https://github.com/cheeriojs/cheerio"
             })
 
@@ -85,8 +85,8 @@ namespace Pkger{
                 version = SemVer(0,1,1),
                 authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")}) :: Nil,
                 edition = SemVer(0,14,6),
-                dependencies = PackageDependency({name = "css-select", version = SemVer(3,1,2)}) :: 
-                               PackageDependency({name = "css-what", version = SemVer(5,0,0)}) :: Nil,
+                dependencies = PackageDependency({name = "css-select", version = SemVer(3,1,2),maxversion = None}) :: 
+                               PackageDependency({name = "css-what", version = SemVer(5,0,0),maxversion = None}) :: Nil,
                 url = "https://github.com/cheeriojs/cheerio-select"
 
             })
@@ -98,8 +98,8 @@ namespace Pkger{
                 authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")})::
                           Author({name = "chriseppstein", email = None, website = Some("https://github.com/chriseppstein")}) :: Nil,
                 edition = SemVer(0,14,6),
-                dependencies = PackageDependency({name = "boolbase", version = SemVer(1,0,0)}) :: 
-                               PackageDependency({name = "css-what", version = SemVer(5,0,0)}) :: Nil,
+                dependencies = PackageDependency({name = "boolbase", version = SemVer(1,0,0),maxversion = None}) :: 
+                               PackageDependency({name = "css-what", version = SemVer(5,0,0),maxversion = None}) :: Nil,
                 url = "https://github.com/fb55/css-select"
 
             })
@@ -111,7 +111,7 @@ namespace Pkger{
                 authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")})::
                           Nil,
                 edition = SemVer(0,14,6),
-                dependencies = PackageDependency({name = "entities", version = SemVer(2,2,0)}) :: Nil,
+                dependencies = PackageDependency({name = "entities", version = SemVer(2,2,0),maxversion = None}) :: Nil,
                 url = "https://github.com/fb55/css-what"
 
             })
@@ -143,9 +143,9 @@ namespace Pkger{
                 authors = Author({name = "fredkschott",email = None, website = None}) :: 
                           Author({name = "Mikeal Rogers", email = None, website = Some("https://github.com/mikeal")}) :: Nil,
                 edition = SemVer(0,14,6),
-                dependencies = PackageDependency({name = "caseless", version = SemVer(0,12,0)})::
-                               PackageDependency({name = "extend", version = SemVer(3,0,2)}) ::
-                               PackageDependency({name = "json-stringify-safe", version = SemVer(5,0,1)}) :: Nil,
+                dependencies = PackageDependency({name = "caseless", version = SemVer(0,12,0),maxversion = None})::
+                               PackageDependency({name = "extend", version = SemVer(3,0,2),maxversion = None}) ::
+                               PackageDependency({name = "json-stringify-safe", version = SemVer(5,0,1),maxversion = None}) :: Nil,
                 url = "https://github.com/request/request"
             })
         

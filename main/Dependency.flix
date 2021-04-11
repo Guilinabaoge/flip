@@ -29,7 +29,7 @@ namespace Pkger{
         instance ToString[PackageDependency] {
             pub def toString(x: PackageDependency): String = 
                 let PackageDependency(a1) = x;
-                let string = "{name: ${a1.name}  version: ${a1.version}}";
+                let string = "{name: ${a1.name}  version: ${a1.version} maxversion: ${a1.maxversion}}";
                 string
         } 
 
@@ -41,7 +41,7 @@ namespace Pkger{
         }
 
         pub enum PackageDependency {
-            case PackageDependency({name: String, version : SemVer})   //, maxversion: Option[SemVer]
+            case PackageDependency({name: String, version : SemVer, maxversion: Option[SemVer]})   //, maxversion: Option[SemVer]
         }
 
         pub def getPackageName(pd: PackageDependency): String = 

@@ -140,7 +140,7 @@ namespace Pkger/JSONParser{
     def testJson2Semver01(): Bool & Impure= 
         let jstring = JString("(1,2,3)");
         let semver = jstring2Semver(jstring);
-        let expect = Ok(SemVer(1,2,3));
+        let expect = Ok(Some(SemVer(1,2,3)));
         semver == expect
     
     //
@@ -150,21 +150,28 @@ namespace Pkger/JSONParser{
     def testJson2Semver02(): Bool & Impure= 
         let jstring = JString("(14,2,3)");
         let semver = jstring2Semver(jstring);
-        let expect = Ok(SemVer(14,2,3));
+        let expect = Ok(Some(SemVer(14,2,3)));
         semver == expect
 
     @test 
-    def testJson2Dependencies(): Bool & Impure = 
-        let jobject = JObject(Map#{"name"->JString("MyPackageNameTwo"), "version" -> JString("(2,0,0)")});
+    def testJson2Dependencies01(): Bool & Impure = 
+        let jobject = JObject(Map#{"name"->JString("MyPackageNameTwo"), "version" -> JString("(2,0,0)"), "maxversion" -> JString("None")});
         let dep = json2Dependency(jobject);
-        let expect = Ok(PackageDependency({name = "MyPackageNameTwo", version = SemVer(2,0,0)}));
+        let expect = Ok(PackageDependency({name = "MyPackageNameTwo", version = SemVer(2,0,0),maxversion = None}));
+        dep == expect
+    
+    @test 
+    def testJson2Dependencies02(): Bool & Impure = 
+        let jobject = JObject(Map#{"name"->JString("MyPackageNameTwo"), "version" -> JString("(2,0,0)"), "maxversion" -> JString("(3,0,0)")});
+        let dep = json2Dependency(jobject);
+        let expect = Ok(PackageDependency({name = "MyPackageNameTwo", version = SemVer(2,0,0),maxversion = Some(SemVer(3,0,0))}));
         dep == expect
 
     @test 
     def testJson2PackageInfo(): Bool & Impure= 
     use Result.flatMap;
         let authorsmap = JArray(JObject(Map#{"name"->JString("Peter"),"email"->JString("None"),"website"->JString("None")})::Nil);
-        let dependenciesmap = JArray(JObject(Map#{"name"->JString("MyPackageNameTwo"), "version" -> JString("(2,0,0)")})::Nil);
+        let dependenciesmap = JArray(JObject(Map#{"name"->JString("MyPackageNameTwo"), "version" -> JString("(2,0,0)"),"maxversion" -> JString("None")})::Nil);
         let testinput = JObject(Map#{"name"->JString("MyPackageNameOne"), "version" -> JString("(1,0,0)"), "authors"->authorsmap, "edition" -> JString("(0,4,6)"),
         "dependencies" -> dependenciesmap, "url" -> JString("Nil")});
         let expect = PackageInfo({
@@ -172,7 +179,7 @@ namespace Pkger/JSONParser{
                 version = SemVer(1,0,0), 
                 authors = Author({name = "Peter", email = None, website = None}) :: Nil,
                 edition = SemVer(0,4,6),
-                dependencies = PackageDependency({name = "MyPackageNameTwo",version = SemVer(2,0,0)}) :: Nil,
+                dependencies = PackageDependency({name = "MyPackageNameTwo",version = SemVer(2,0,0),maxversion = None}) :: Nil,
                 url = "Nil"});
         match json2PackageInfo(testinput){
             case Ok(x) => 
