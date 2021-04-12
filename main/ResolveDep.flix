@@ -31,33 +31,41 @@ namespace Pkger{
         //
         // check if the package exist in the registry, if it exist get it's dependencies and subdependencies 
         //
-        pub def getFullDependencies(registry: Map[String,PackageInfo],plist: List[PackageDependency],packagename: String): List[PackageDependency] & Impure= 
+        pub def getFullDependencies(registry: Map[String,List[PackageInfo]],plist: List[PackageDependency],packagename: String): Result[List[PackageDependency],String] & Impure= 
             use Result.flatMap;
             let keys = Map.keysOf(registry);
             if (Set.memberOf(packagename,keys)) {
-                let packageinfo = match Map.get(packagename,registry){
+                let packageinfolist  = match Map.get(packagename,registry){
                     case None => ??? //TODO is there a way to return an error here? since the packageinfo is not in the map
                     case Some(x) => x
                 };
-                
+
+                let packageinfo = match List.head(packageinfolist) {
+                    case None => ???
+                    case Some(x) => x
+                };
+            
                 let deplist = pinfogetdependencies(packageinfo);
                 if (deplist == Nil) {
-                    plist   
+                    Ok(plist)   
                 }
                 else {
                     // newplist is the dependencies of the current package, for each of the dependented package call getFullDependencies to get their dependencies recursively 
                     let newplist = deplist ::: plist;
                     let depnames = List.map(getPackageName,deplist);
                     let recurlist = List.map(getFullDependencies(registry,newplist),depnames);
-                    //TODO when you have a list of List[Result[A]] how can u turn it to List[A]?
-                    let result = List.flatten(recurlist);
-                    let set = List.toSet(result);
-                    Set.toList(set)  
+                    let recurlist2 = Result.sequence(recurlist);
+                    match recurlist2 {
+                        case Ok(mylist) => let result = List.flatten(mylist);
+                                            let set = List.toSet(result);
+                                            Ok(Set.toList(set))  
+                        case Err(_) => ???
+                    }
+                    
                 }
             }
             else {
-                ???
-                //Err("package ${packagename} is not exist")
+                Err("package ${packagename} is not exist")
             }            
             
     }

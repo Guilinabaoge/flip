@@ -35,7 +35,10 @@ namespace Pkger/ResolveDep{
     def testResolveDep01(): Bool & Impure=
     use Result.flatMap;
         match fakeregister(){
-            case Ok(x) => getFullDependencies(x,Nil,"entities") == Nil
+            case Ok(x) => match getFullDependencies(x,Nil,"entities") {
+                case Ok(i) => i == Nil
+                case Err(_) => false
+            } 
             case Err(_) => false
         }
     
@@ -44,7 +47,10 @@ namespace Pkger/ResolveDep{
     use Result.flatMap;
         match fakeregister(){
             case Ok(x) => 
-            let set = List.toSet(getFullDependencies(x,Nil,"css-select"));
+            let set = match getFullDependencies(x,Nil,"css-select") {
+                case Ok(i) => List.toSet(i)
+                case Err(_) => Set#{}
+            };
             let expectset = Set#{PackageDependency({name = "boolbase", version = SemVer(1,0,0),maxversion = None}),
                                 PackageDependency({name = "css-what", version = SemVer(5,0,0),maxversion = None}),
                                 PackageDependency({name = "entities", version = SemVer(2,2,0),maxversion = None})};
@@ -57,7 +63,10 @@ namespace Pkger/ResolveDep{
     use Result.flatMap;
         match fakeregister(){
             case Ok(x) => 
-            let set = List.toSet(getFullDependencies(x,Nil,"crawler"));
+            let set = match getFullDependencies(x,Nil,"crawler") {
+                case Ok(i) => List.toSet(i)
+                case Err(_) => Set#{}
+            };
             let expectset = Set#{
                 PackageDependency({name = "bottleneckp", version = SemVer(1,1,3),maxversion = None}),
                 PackageDependency({name = "cheerio", version = SemVer(1,0,0),maxversion = None}),

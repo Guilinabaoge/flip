@@ -119,8 +119,7 @@ namespace Pkger{
                 let depVersion = Map.get("version",o);
                 let depMaxVersion = Map.get("maxversion",o);
                 match (depName,depVersion,depMaxVersion) {
-                    case (Some(JString(realdepname)),Some(JString(realdepversion)),Some(JString(realmaxversion))) => 
-                        realmaxversion |> println;
+                    case (Some(JString(realdepname)),Some(JString(realdepversion)),Some(JString(realmaxversion))) =>
                         let* sem = jstring2Semver(JString(realdepversion));
                         let sem2 = match sem {
                             case None => SemVer(1,2,3)
@@ -128,7 +127,7 @@ namespace Pkger{
                         };
                         let* maxsem = jstring2Semver(JString(realmaxversion));
                         Ok(PackageDependency({name = realdepname, version = sem2,maxversion = maxsem}))
-                    case (Some(_),Some(_),Some(_)) => "Hi" |> println; Err("Hi")
+                    case (Some(_),Some(_),Some(_)) => Err("invalid datatype, can't turn the json to depdendency")
                     case (_,_,_) => Err("missing Dep name or version")
                 }
             case JArray(_) => Err("unexpect Array") 

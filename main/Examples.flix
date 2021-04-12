@@ -179,8 +179,7 @@ namespace Pkger{
                 url = "https://github.com/isaacs/json-stringify-safe"
             })
 
-        pub def fakeregister(): Result[Map[String,PackageInfo],String] = 
-        // TODO how to do Map[String,List[PackageInfo]]
+        pub def fakeregister(): Result[Map[String,List[PackageInfo]],String] = 
             let crawler = crawler();
             let bottleneckp = bottleneckp();
             let cheerio = cheerio();
@@ -193,18 +192,18 @@ namespace Pkger{
             let caseless = caseless();
             let extend = extend();
             let json_stringify_safe = json_stringify_safe();
-            Ok(Map#{pinfogetname(crawler) -> crawler,
-                    pinfogetname(css_what) -> css_what,
-                    pinfogetname(bottleneckp) -> bottleneckp,
-                    pinfogetname(cheerio) -> cheerio,
-                    pinfogetname(cheerio_select) -> cheerio_select,
-                    pinfogetname(entities) -> entities,
-                    pinfogetname(css_select) -> css_select,
-                    pinfogetname(boolbase) -> boolbase,
-                    pinfogetname(request) -> request,
-                    pinfogetname(caseless) -> caseless,
-                    pinfogetname(extend) -> extend,
-                    pinfogetname(json_stringify_safe) -> json_stringify_safe})
+            Ok(Map#{pinfogetname(crawler) -> crawler :: Nil,
+                    pinfogetname(css_what) -> css_what :: Nil,
+                    pinfogetname(bottleneckp) -> bottleneckp :: Nil,
+                    pinfogetname(cheerio) -> cheerio :: Nil,
+                    pinfogetname(cheerio_select) -> cheerio_select :: Nil,
+                    pinfogetname(entities) -> entities :: Nil,
+                    pinfogetname(css_select) -> css_select :: Nil,
+                    pinfogetname(boolbase) -> boolbase :: Nil,
+                    pinfogetname(request) -> request :: Nil,
+                    pinfogetname(caseless) -> caseless :: Nil,
+                    pinfogetname(extend) -> extend :: Nil,
+                    pinfogetname(json_stringify_safe) -> json_stringify_safe :: Nil})
 
 
     }
