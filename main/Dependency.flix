@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-use Pkger/SemVer.SemVer;
+use Pkger/SemVer.{SemVer,lessEqual};
 namespace Pkger{
     namespace Dependency {
         instance Eq[PackageDependency]{
@@ -22,7 +22,8 @@ namespace Pkger{
                 let PackageDependency(p1) = x;
                 let PackageDependency(p2) = y;
                 p1.name == p2.name and 
-                p1.version == p2.version
+                p1.version == p2.version and 
+                p1.maxversion == p2.maxversion
             }
         }
 
@@ -35,17 +36,19 @@ namespace Pkger{
 
         instance Order[PackageDependency] {
             pub def compare(xs: PackageDependency, ys: PackageDependency): Comparison = match (xs,ys){
-                case (PackageDependency(x),PackageDependency(y)) => x.name <=> y.name
+                case (PackageDependency(x),PackageDependency(y)) => (x.name,x.version,x.maxversion) <=> (y.name,y.version,y.maxversion) 
                 case _ => LessThan
             }
         }
 
         pub enum PackageDependency {
-            case PackageDependency({name: String, version : SemVer, maxversion: Option[SemVer]})   //, maxversion: Option[SemVer]
+            case PackageDependency({name: String, version : SemVer, maxversion: Option[SemVer]})   
         }
 
         pub def getPackageName(pd: PackageDependency): String = 
             let PackageDependency(x) = pd;
             x.name
+        
+        
     }
 }

@@ -24,9 +24,7 @@ use Pkger/Dependency.PackageDependency.PackageDependency;
 use Pkger/Dependency.PackageDependency;
 use Pkger/Lex.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPackageInfo,lex};
 use Pkger/JSONParser.{parse,json2author,jstring2string,jstring2Semver,json2Dependency,json2PackageInfo};
-use Pkger/JSON.JSON.JObject;
-use Pkger/JSON.JSON.JString;
-use Pkger/JSON.JSON.JArray;
+use Pkger/JSON.JSON.{JObject,JString,JArray};
 
 namespace Pkger/JSONParser{
     @test 

@@ -33,6 +33,12 @@
                 "SemVer(${major},${minor},${patch})"
         }
 
+        instance Order[SemVer]{
+            pub def compare(a: SemVer, b: SemVer): Comparison = match (a,b){
+                case (SemVer(x),SemVer(y)) => x <=> y
+            }
+        }
+
         
 
         pub enum SemVer{

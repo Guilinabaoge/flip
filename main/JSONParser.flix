@@ -205,7 +205,6 @@ namespace Pkger{
                     case ')' => let newnum = String.reverse(num); (newnum,rest)
                     case _ => 
                     let newnum = Char.toString(n) + num; 
-                    //newnum |> println;
                     parse2digits(rest,newnum)
                 }
             }
@@ -213,39 +212,11 @@ namespace Pkger{
         //
         //give string "(x,y,z)" return tuple (x,y,z)
         //
-        def parseTokens(tokens: List[String]): Result[(Int32,Int32,Int32),String] & Impure= 
+        def parseTokens(tokens: List[String]): Result[(Int32,Int32,Int32),String] = 
             let intstring = List.map(Int32.fromString,tokens);
-            let major1 = List.head(intstring);
-            let major2 = match major1{
-                //TODO is there a way to report error when None appears?
-                case None => ???
-                case Some(y) => y
-            };
-            let major3 = match major2{
-                case Err(_) => ???
-                case Ok(y) => y
-            };
-            let minor1 = List.head(List.slice(1,2,intstring));
-            let minor2 = match minor1 {
-                case None => ???
-                case Some(y) => y
-            };
-            let minor3 = match minor2{
-                case Err(_) => ???
-                case Ok(y) => y
-            };
-
-            let patch1 = List.head(List.slice(2,3,intstring));
-            let patch2 = match patch1 {
-                case None => ???
-                case Some(y) => y
-            };
-            let patch3 = match patch2{
-                case Err(_) => ???
-                case Ok(y) => y
-            };
-            Ok(major3,minor3,patch3)
-            
-            
+            match intstring {
+                case Ok(major) :: Ok(minor) :: Ok(patch) :: Nil => Ok((major,minor,patch))
+                case _ => Err("Cannot parse as semver")
+            }            
     }
 }

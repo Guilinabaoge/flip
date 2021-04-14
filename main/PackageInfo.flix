@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-use Pkger/SemVer.SemVer;
+use Pkger/SemVer.{SemVer,lessEqual};
 use Pkger/Author.Author;
 use Pkger/Dependency.PackageDependency;
 use Pkger/Lex.{stringifyAuthors,stringifyDependency,stringifySemver};
@@ -43,26 +43,14 @@ namespace Pkger{
                 let edition = stringifySemver(package1.edition);
                 let dependencies = stringifyDependency(package1.dependencies);
                 let url = package1.url;
-                /// let quote = Char.toString('"');
-                /// let seperator = String.lineSeparator();
-                //TODO ugly code 
-                let packageInfoString = Char.toString('"')+"name"+Char.toString('"') + ":" + Char.toString('"')+name+Char.toString('"') + "," + String.lineSeparator()+
-                                        Char.toString('"')+"version"+Char.toString('"') + ":" + Char.toString('"')+version+Char.toString('"') + "," +String.lineSeparator()+
-                                        Char.toString('"')+"authors"+Char.toString('"') + ":" + "["+authors+"]" + "," +String.lineSeparator()+
-                                        Char.toString('"')+"edition"+Char.toString('"') + ":" + Char.toString('"')+edition+Char.toString('"') + "," +String.lineSeparator()+
-                                        Char.toString('"')+"dependencies"+Char.toString('"') + ":" + "["+dependencies+"]" + "," +String.lineSeparator()+
-                                        Char.toString('"')+"url"+Char.toString('"') + ":" + Char.toString('"')+url+Char.toString('"');
-                                        /// "${quote}name${quote}:${quote}${name}${quote},${seperator}
-                                        /// ${quote}version${quote}:${quote}${version}${quote},${seperator}
-                                        /// ${quote}authors${quote}:[${}],${seperator}
-                                        /// ${quote}edition${quote}:${quote}${edition}${quote},${seperator}
-                                        /// ${quote}dependencies${quote}:[${dependencies}],${seperator}
-                                        /// ${quote}url${quote}:${quote}${url}${quote},${seperator}";
+                let quote = Char.toString('"');
+                let seperator = String.lineSeparator();
+                let packageInfoString = "${quote}name${quote}:${quote}${name}${quote},${seperator}${quote}version${quote}:${quote}${version}${quote},${seperator}${quote}authors${quote}:[${authors}],${seperator}${quote}edition${quote}:${quote}${edition}${quote},${seperator}${quote}dependencies${quote}:[${dependencies}],${seperator}${quote}url${quote}:${quote}${url}${quote}";
                                         
                 packageInfoString
         } 
 
- // Any field that's only require by the registry is ignore for now
+        // Any field that's only require by the registry is ignore for now
         pub enum PackageInfo{
             case PackageInfo({
                 name : String,
@@ -73,6 +61,22 @@ namespace Pkger{
                 url : String
             })
         }
+
+        //
+        // Compare same package with different version, return true if package a have newer or same version as package b
+        // 9 = can't compare package with different name
+        //
+        pub def comparePackageInfo(a: PackageInfo,b: PackageInfo): Int32 = 
+            let semverA = pinfogetversion(a);
+            let semverB = pinfogetversion(b);
+            if (pinfogetname(a) == pinfogetname(b)){
+                if (lessEqual(semverA,semverB)) {1}
+                else {0}
+            }
+            else {
+                9 
+            }
+            
 
         pub def pinfogetname(p: PackageInfo): String = 
             let PackageInfo(unwrap) = p;

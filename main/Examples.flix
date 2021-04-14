@@ -44,22 +44,43 @@ namespace Pkger{
                 url = "https://github.com/bda-research/node-crawler"
             })
         
-         pub def crawler2(): PackageInfo = 
-            PackageInfo({
-                name = "crawler",
-                version = SemVer(2,0,0),
-                authors = Author({name = "jack",email = None, website = None}) :: Author({name = "paulvalla", email = None, website = Some("https://github.com/paulvalla")}) :: Nil,
-                edition = SemVer(0,14,6),
-                dependencies = 
-                               PackageDependency({name = "cheerio", version = SemVer(2,0,0),maxversion = None}) ::
-                               PackageDependency({name = "request", version = SemVer(2,88,2),maxversion = None}) :: Nil,
-                url = "https://github.com/bda-research/node-crawler"
-            })
         
         pub def bottleneckp(): PackageInfo = 
             PackageInfo({
                 name = "bottleneckp",
                 version = SemVer(1,1,3),
+                authors = Author({name = "darrenqc", email = None, website = Some("https://github.com/darrenqc")})::
+                          Author({name = "mike442144", email = None, website = None}):: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil, 
+                url = "https://github.com/darrenqc/BottleneckP"
+            })
+        
+        pub def bottleneckp2(): PackageInfo = 
+            PackageInfo({
+                name = "bottleneckp",
+                version = SemVer(1,5,3),
+                authors = Author({name = "darrenqc", email = None, website = Some("https://github.com/darrenqc")})::
+                          Author({name = "mike442144", email = None, website = None}):: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil, 
+                url = "https://github.com/darrenqc/BottleneckP"
+            })
+        
+        pub def bottleneckp3(): PackageInfo = 
+            PackageInfo({
+                name = "bottleneckp",
+                version = SemVer(1,5,2),
+                authors = Author({name = "darrenqc", email = None, website = Some("https://github.com/darrenqc")})::
+                          Author({name = "mike442144", email = None, website = None}):: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil, 
+                url = "https://github.com/darrenqc/BottleneckP"
+            })
+        pub def bottleneckp4(): PackageInfo = 
+            PackageInfo({
+                name = "bottleneckp",
+                version = SemVer(2,5,2),
                 authors = Author({name = "darrenqc", email = None, website = Some("https://github.com/darrenqc")})::
                           Author({name = "mike442144", email = None, website = None}):: Nil,
                 edition = SemVer(0,14,6),
@@ -117,6 +138,16 @@ namespace Pkger{
             })
 
         pub def entities(): PackageInfo = 
+            PackageInfo({
+                name = "entities", 
+                version = SemVer(2,4,0),
+                authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil,
+                url = "https://github.com/fb55/entities"
+            })
+        
+         pub def entities2(): PackageInfo = 
             PackageInfo({
                 name = "entities", 
                 version = SemVer(2,2,0),
@@ -187,6 +218,7 @@ namespace Pkger{
             let css_select = css_select();
             let css_what = css_what();
             let entities = entities();
+            let entities2 = entities2();
             let boolbase = boolbase();
             let request = request();
             let caseless = caseless();
@@ -197,7 +229,7 @@ namespace Pkger{
                     pinfogetname(bottleneckp) -> bottleneckp :: Nil,
                     pinfogetname(cheerio) -> cheerio :: Nil,
                     pinfogetname(cheerio_select) -> cheerio_select :: Nil,
-                    pinfogetname(entities) -> entities :: Nil,
+                    pinfogetname(entities) -> entities2 :: entities :: Nil,
                     pinfogetname(css_select) -> css_select :: Nil,
                     pinfogetname(boolbase) -> boolbase :: Nil,
                     pinfogetname(request) -> request :: Nil,
