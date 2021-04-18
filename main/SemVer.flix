@@ -39,11 +39,33 @@
             }
         }
 
-        
-
         pub enum SemVer{
             case SemVer(Int32, Int32, Int32)
         }
+        
+        //
+        // return true if a have same major but bigger or equal minor/ patch
+        //
+        pub def isAdaptable(a: SemVer,b:SemVer): Bool = 
+            let SemVer(major1,minor1,patch1) = a;
+            let SemVer(major2,minor2,patch2) = b;
+            let major = major1 <=> major2;
+            let minor = minor1 <=> minor2; 
+            let patch = patch1 <=> patch2;
+            match major {
+                case GreaterThan => false
+                case LessThan => false 
+                case EqualTo => match minor {
+                    case LessThan => false
+                    case GreaterThan => true
+                    case EqualTo => match patch {
+                        case LessThan => false
+                        case GreaterThan => true
+                        case EqualTo => true
+                    }
+                }
+            }
+            
         
         ///
         /// Return true if SemVer a have higher precedence than b or same.

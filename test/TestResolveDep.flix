@@ -25,7 +25,8 @@ use Pkger/Dependency.PackageDependency;
 use Pkger/Lex.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPackageInfo,lex};
 use Pkger/JSONParser.{parse,json2author,jstring2string,jstring2Semver,json2Dependency,json2PackageInfo};
 use Pkger/JSON.JSON.{JObject,JString,JArray};
-use Pkger/Examples.{fakeregister,bottleneckp,bottleneckp2,crawler,bottleneckp3,bottleneckp4};
+use Pkger/Examples.{fakeregister,bottleneckp,bottleneckp2,crawler,bottleneckp3,bottleneckp4,boolbase,css_what,entities,cheerio,cheerio_select,
+    css_select,request,caseless,extend,json_stringify_safe,entities2};
 use Pkger/ResolveDep.{getFullDependencies,sortPackageInfo};
 
 namespace Pkger/ResolveDep{
@@ -49,9 +50,9 @@ namespace Pkger/ResolveDep{
                 case Ok(i) => i
                 case Err(_) => Set#{}
             };
-            let expectset = Set#{PackageDependency({name = "boolbase", version = SemVer(1,0,0),maxversion = None}),
-                                PackageDependency({name = "css-what", version = SemVer(5,0,0),maxversion = None}),
-                                PackageDependency({name = "entities", version = SemVer(2,2,0),maxversion = None})};
+            let expectset = Set#{boolbase(),css_what(),entities()};
+            //set |> println;
+            //expectset |> println;
             set == expectset
             case Err(_) => false
         }
@@ -66,17 +67,7 @@ namespace Pkger/ResolveDep{
                 case Err(_) => Set#{}
             };
             let expectset = Set#{
-                PackageDependency({name = "bottleneckp", version = SemVer(1,1,3),maxversion = None}),
-                PackageDependency({name = "cheerio", version = SemVer(1,0,0),maxversion = None}),
-                PackageDependency({name = "cheerio-select", version = SemVer(0,1,1),maxversion = None}),
-                PackageDependency({name = "css-select", version = SemVer(3,1,2),maxversion = None}),
-                PackageDependency({name = "boolbase", version = SemVer(1,0,0),maxversion = None}),
-                PackageDependency({name = "css-what", version = SemVer(5,0,0),maxversion = None}),
-                PackageDependency({name = "entities", version = SemVer(2,2,0),maxversion = None}),
-                PackageDependency({name = "request", version = SemVer(2,88,2),maxversion = None}),
-                PackageDependency({name = "caseless", version = SemVer(0,12,0),maxversion = None}),
-                PackageDependency({name = "extend", version = SemVer(3,0,2),maxversion = None}),
-                PackageDependency({name = "json-stringify-safe", version = SemVer(5,0,1),maxversion = None})
+                bottleneckp(),cheerio(),cheerio_select(),css_select(),boolbase(),css_what(),entities(),request(),caseless(),extend(),json_stringify_safe()
             };
             set == expectset
             case Err(_) => false
@@ -91,9 +82,7 @@ namespace Pkger/ResolveDep{
                 case Ok(i) => i
                 case Err(_) => Set#{}
             };
-            let expectset = Set#{PackageDependency({name = "entities", version = SemVer(2,4,0),maxversion = None})};
-            set |> println;
-            expectset |> println;
+            let expectset = Set#{entities()};
             set == expectset
             case Err(_) => false
         }
@@ -115,10 +104,6 @@ namespace Pkger/ResolveDep{
         let p1 = bottleneckp();
         let p2 = crawler();
         comparePackageInfo(p1,p2) == 9
-        /// match comparePackageInfo(p1,p2) {
-        ///     case Ok(_) => false
-        ///     case Err(_) => true
-        /// }
 
      @test 
     def testSortPackageInfo01(): Bool =

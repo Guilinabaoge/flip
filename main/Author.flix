@@ -25,6 +25,13 @@ namespace Pkger{
                 a1.website == a2.website
         }   
 
+        instance Order[Author] {
+            pub def compare(xs: Author, ys: Author): Comparison = match (xs,ys){
+                case (Author(x),Author(y)) => (x.name,x.email,x.website) <=> (y.name,y.email,y.website) 
+                case _ => LessThan
+            }
+        }
+
         instance ToString[Author] {
             pub def toString(x: Author): String = 
                 let Author(a1) = x;

@@ -132,7 +132,7 @@ namespace Pkger{
                 authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")})::
                           Nil,
                 edition = SemVer(0,14,6),
-                dependencies = PackageDependency({name = "entities", version = SemVer(2,2,0),maxversion = None}) :: Nil,
+                dependencies = PackageDependency({name = "entities", version = SemVer(2,2,1),maxversion = None}) :: Nil,
                 url = "https://github.com/fb55/css-what"
 
             })
@@ -140,7 +140,7 @@ namespace Pkger{
         pub def entities(): PackageInfo = 
             PackageInfo({
                 name = "entities", 
-                version = SemVer(2,4,0),
+                version = SemVer(2,4,1),
                 authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")}) :: Nil,
                 edition = SemVer(0,14,6),
                 dependencies = Nil,
@@ -150,7 +150,7 @@ namespace Pkger{
          pub def entities2(): PackageInfo = 
             PackageInfo({
                 name = "entities", 
-                version = SemVer(2,2,0),
+                version = SemVer(2,2,2),
                 authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")}) :: Nil,
                 edition = SemVer(0,14,6),
                 dependencies = Nil,

@@ -50,6 +50,13 @@ namespace Pkger{
                 packageInfoString
         } 
 
+        instance Order[PackageInfo] {
+            pub def compare(xs: PackageInfo, ys: PackageInfo): Comparison = match (xs,ys){
+                case (PackageInfo(x),PackageInfo(y)) => (x.name,x.version,x.authors,x.edition,x.dependencies,x.url) <=> (y.name,y.version,y.authors,y.edition,y.dependencies,y.url) 
+                case _ => LessThan
+            }
+        }
+
         // Any field that's only require by the registry is ignore for now
         pub enum PackageInfo{
             case PackageInfo({
@@ -76,7 +83,6 @@ namespace Pkger{
             else {
                 9 
             }
-            
 
         pub def pinfogetname(p: PackageInfo): String = 
             let PackageInfo(unwrap) = p;
@@ -91,4 +97,5 @@ namespace Pkger{
             unwrap.dependencies
 
     }
+
 }

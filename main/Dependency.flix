@@ -48,6 +48,15 @@ namespace Pkger{
         pub def getPackageName(pd: PackageDependency): String = 
             let PackageDependency(x) = pd;
             x.name
+
+        pub def getMaxVer(pd: PackageDependency): Option[SemVer] = 
+            let PackageDependency(x) = pd;
+            x.maxversion
+        
+        pub def getMinVer(pd: PackageDependency): SemVer = 
+            let PackageDependency(x) = pd;
+            x.version
+
         
         
     }

@@ -19,10 +19,11 @@ use Pkger/PackageInfo.{PackageInfo,comparePackageInfo};
 use Pkger/PackageInfo.PackageInfo.PackageInfo;
 use Pkger/PackageInfo.{pinfogetname, pinfogetversion,pinfogetdependencies};
 use Pkger/SemVer.SemVer.SemVer;
-use Pkger/SemVer.SemVer;
+use Pkger/SemVer.{SemVer,isAdaptable,lessEqual};
 use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
-use Pkger/Dependency.{PackageDependency,getPackageName};
+use Pkger/Dependency.{PackageDependency,getPackageName,getMaxVer,getMinVer};
+use Pkger/Examples.{entities2};
 
 namespace Pkger{
     namespace ResolveDep{
@@ -30,7 +31,7 @@ namespace Pkger{
         //
         // check if the package exist in the registry, if it exist get it's dependencies and subdependencies. 
         //
-        pub def getFullDependencies(registry: Map[String,List[PackageInfo]],pset: Set[PackageDependency],packagename: String): Result[Set[PackageDependency],String] & Impure= 
+        pub def getFullDependencies(registry: Map[String,List[PackageInfo]],pset: Set[PackageInfo],packagename: String): Result[Set[PackageInfo],String] & Impure= 
             use Result.flatMap;
             let keys = Map.keysOf(registry);
             if (Set.memberOf(packagename,keys)) {
@@ -38,10 +39,7 @@ namespace Pkger{
                 let* packageinfolist = Option.toOk(value,"The package does not exist");
                 let* sortedlist = sortPackageInfo(packageinfolist);
 
-                let packageinfo = match List.head(packageinfolist) {
-                    case None => ???
-                    case Some(x) => x
-                };
+                let* packageinfo = Option.toOk(List.last(sortedlist),"The package does not exist");
             
                 let deplist = pinfogetdependencies(packageinfo);
                 if (deplist == Nil) {
@@ -50,9 +48,7 @@ namespace Pkger{
                 else {
                     // newplist is the dependencies of the current package, for each of the dependented package call getFullDependencies to get their dependencies recursively 
                     let depset = List.toSet(deplist);
-                    let newpset = Set.union(depset,pset);
-                    let depnames = Set.map(getPackageName,depset);
-                    let recurlist = Set.map(getFullDependencies(registry,newpset),depnames);
+                    let recurlist = Set.map(detversion(registry),depset);
                     let recurlist2 = Set.toList(recurlist);
                     let recurlist3 = Result.sequence(recurlist2);
                     match recurlist3 {
@@ -64,10 +60,72 @@ namespace Pkger{
             else {
                 Err("package ${packagename} is not exist")
             }      
+        
+        //
+        // If the given dependency don't have subdependency, return the newest version of it. If it have subdependency, return newest subdependency as well
+        //
+        pub def detversion(registry: Map[String,List[PackageInfo]],dependency: PackageDependency): Result[Set[PackageInfo],String] & Impure= 
+        use Result.flatMap;
+            let* result = findNewest(registry,dependency);
+            let resultdep = pinfogetdependencies(result);
+            let resultdepset = List.toSet(resultdep);
+            if (resultdep == Nil) {
+                Ok(Set#{result})
+            }
+            else {
+                let recresult1 = Set.map(detversion(registry),resultdepset);
+                let recresult2 = Set.toList(recresult1);
+                let recresult3 = Result.sequence(recresult2);
+                match recresult3 {
+                    case Ok(myset) => let a = List.toSet(myset);
+                                      let b = Set.flatten(a);
+                                      let c = Set.union(Set#{result},b);
+                                            Ok(c)
+                    case Err(x) => Err(x)
+                }
+            }
+        
+        //
+        // Find the newest version of the dependency available in the registry under the restricitions 
+        //
+        pub def findNewest(registry:Map[String,List[PackageInfo]],dependency: PackageDependency): Result[PackageInfo,String] & Impure= 
+        use Result.flatMap;
+            let packagename = getPackageName(dependency);
+            let* packagelist = Option.toOk(Map.get(packagename,registry),"${packagename} is not exist");
+            let minversion = getMinVer(dependency);
+            let maxversion = getMaxVer(dependency);
+            let* sortedlist = sortPackageInfo(packagelist);
+            findNewestHelper(sortedlist,minversion,maxversion,SemVer(0,0,0),sortedlist)
+        
+        def findNewestHelper(sortedlist: List[PackageInfo],minver: SemVer, maxver: Option[SemVer],bestsofar: SemVer, originlist: List[PackageInfo]): Result[PackageInfo,String] & Impure= 
+            match sortedlist {
+                case x :: rest => 
+                    if (isAdaptable(pinfogetversion(x),minver)) {
+                        findNewestHelper(rest,minver,maxver,pinfogetversion(x),originlist)
+                    }
+                    else {
+                        findNewestHelper(rest,minver,maxver,bestsofar,originlist)
+                    }
+                case Nil => findPinfoByVersion(originlist,bestsofar)
+            }
+
+        //
+        // Give the Semver return packageinfo if the required version is in the registry 
+        //
+        def findPinfoByVersion(sortedlist: List[PackageInfo], target: SemVer): Result[PackageInfo,String] & Impure = 
+            match sortedlist {
+                case x :: rest =>
+                    if (pinfogetversion(x) == target) {
+                        Ok(x)
+                    } 
+                    else {
+                        findPinfoByVersion(rest,target)
+                    }
+                case Nil => Err("package dont have such version}")
+            }
 
 
         pub def sortPackageInfo(list: List[PackageInfo]): Result[List[PackageInfo],String] = 
-            //TODO  List.sortWith(comparePackageInfo,list)  comparePackageInfo is f -> Result[int32] how to make it f -> int32
             Ok(List.sortWith(comparePackageInfo,list)) 
             
     }
