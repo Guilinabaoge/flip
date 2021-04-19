@@ -80,7 +80,7 @@ namespace Pkger{
                     case Ok(myset) => let a = List.toSet(myset);
                                       let b = Set.flatten(a);
                                       let c = Set.union(Set#{result},b);
-                                            Ok(c)
+                                      Ok(c)
                     case Err(x) => Err(x)
                 }
             }
@@ -110,7 +110,7 @@ namespace Pkger{
             }
 
         //
-        // Give the Semver return packageinfo if the required version is in the registry 
+        // Give the Semver return packageinfo if the required version is in the registry
         //
         def findPinfoByVersion(sortedlist: List[PackageInfo], target: SemVer): Result[PackageInfo,String] & Impure = 
             match sortedlist {

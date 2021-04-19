@@ -26,7 +26,7 @@ use Pkger/Lex.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPac
 use Pkger/JSONParser.{parse,json2author,jstring2string,jstring2Semver,json2Dependency,json2PackageInfo};
 use Pkger/JSON.JSON.{JObject,JString,JArray};
 use Pkger/Examples.{fakeregister,bottleneckp,bottleneckp2,crawler,bottleneckp3,bottleneckp4,boolbase,css_what,entities,cheerio,cheerio_select,
-    css_select,request,caseless,extend,json_stringify_safe,entities2};
+    css_select,request,caseless,extend,json_stringify_safe,entities2,testconflicts,conflictA,conflictB};
 use Pkger/ResolveDep.{getFullDependencies,sortPackageInfo};
 
 namespace Pkger/ResolveDep{
@@ -83,6 +83,25 @@ namespace Pkger/ResolveDep{
                 case Err(_) => Set#{}
             };
             let expectset = Set#{entities()};
+            set == expectset
+            case Err(_) => false
+        }
+    
+    //
+    //testconflicts have dependencies conflict A and conflict B. Both A and B dependent on entities but with different version. A is with SemVer(2,4,1) B is with SemVer(2,2,2)
+    //the dependency solver should return the result contain only entities with SemVer(2,4,1)
+    //
+    @test 
+    def testResolveDep05(): Bool & Impure=
+    use Result.flatMap;
+        match fakeregister(){
+            case Ok(x) => 
+            let set = match getFullDependencies(x,Set#{},"testconflicts") {
+                case Ok(i) => i
+                case Err(_) => Set#{}
+            };
+            let expectset = Set#{entities(),conflictA(),conflictB()};
+            set |> println;
             set == expectset
             case Err(_) => false
         }

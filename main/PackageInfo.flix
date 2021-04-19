@@ -45,7 +45,7 @@ namespace Pkger{
                 let url = package1.url;
                 let quote = Char.toString('"');
                 let seperator = String.lineSeparator();
-                let packageInfoString = "${quote}name${quote}:${quote}${name}${quote},${seperator}${quote}version${quote}:${quote}${version}${quote},${seperator}${quote}authors${quote}:[${authors}],${seperator}${quote}edition${quote}:${quote}${edition}${quote},${seperator}${quote}dependencies${quote}:[${dependencies}],${seperator}${quote}url${quote}:${quote}${url}${quote}";
+                let packageInfoString = "${seperator}{${seperator}${quote}name${quote}:${quote}${name}${quote},${seperator}${quote}version${quote}:${quote}${version}${quote},${seperator}${quote}authors${quote}:[${authors}],${seperator}${quote}edition${quote}:${quote}${edition}${quote},${seperator}${quote}dependencies${quote}:[${dependencies}],${seperator}${quote}url${quote}:${quote}${url}${quote}${seperator}}";
                                         
                 packageInfoString
         } 

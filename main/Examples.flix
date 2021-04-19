@@ -209,6 +209,39 @@ namespace Pkger{
                 dependencies = Nil,
                 url = "https://github.com/isaacs/json-stringify-safe"
             })
+        
+        pub def testconflicts(): PackageInfo = 
+            PackageInfo({
+                name = "testconflicts",
+                version = SemVer(5,0,1),
+                authors = Author({name = "zhiwei", email = None, website = Some("https://github.com/zhiwei")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = PackageDependency({name = "conflictA", version = SemVer(1,0,0),maxversion = None})::
+                               PackageDependency({name = "conflictB", version = SemVer(1,0,0),maxversion = None}) :: Nil,
+                url = "https://github.com/isaacs/json-stringify-safe"
+            })
+        
+        pub def conflictA(): PackageInfo = 
+            PackageInfo({
+                name = "conflictA",
+                version = SemVer(1,0,0),
+                authors = Author({name = "zhiwei", email = None, website = Some("https://github.com/zhiwei")}) :: Nil,
+                edition = SemVer(0,14,6),   //TODO can two packageinfo with same name different version coexist in a Set?
+                dependencies = PackageDependency({name = "entities", version = SemVer(2,4,1),maxversion = None})::Nil,
+                url = "https://github.com/isaacs/json-stringify-safe"
+            })
+        
+        pub def conflictB(): PackageInfo = 
+            PackageInfo({
+                name = "conflictB",
+                version = SemVer(1,0,0),
+                authors = Author({name = "zhiwei", email = None, website = Some("https://github.com/zhiwei")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = PackageDependency({name = "entities", version = SemVer(2,2,2),maxversion = None})::Nil,
+                url = "https://github.com/isaacs/json-stringify-safe"
+            })
+        
+        
 
         pub def fakeregister(): Result[Map[String,List[PackageInfo]],String] = 
             let crawler = crawler();
@@ -224,6 +257,9 @@ namespace Pkger{
             let caseless = caseless();
             let extend = extend();
             let json_stringify_safe = json_stringify_safe();
+            let testconflicts = testconflicts();
+            let conflictA = conflictA();
+            let conflictB = conflictB();
             Ok(Map#{pinfogetname(crawler) -> crawler :: Nil,
                     pinfogetname(css_what) -> css_what :: Nil,
                     pinfogetname(bottleneckp) -> bottleneckp :: Nil,
@@ -235,8 +271,11 @@ namespace Pkger{
                     pinfogetname(request) -> request :: Nil,
                     pinfogetname(caseless) -> caseless :: Nil,
                     pinfogetname(extend) -> extend :: Nil,
+                    pinfogetname(testconflicts) -> testconflicts :: Nil,
+                    pinfogetname(conflictA) -> conflictA :: Nil,
+                    pinfogetname(conflictB) -> conflictB :: Nil,
                     pinfogetname(json_stringify_safe) -> json_stringify_safe :: Nil})
-
+        
 
     }
 }
