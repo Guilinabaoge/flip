@@ -20,6 +20,8 @@ use Pkger/PackageInfo.pinfogetname;
 use Pkger/SemVer.SemVer.SemVer;
 use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
+use Pkger/Repository.Repository;
+use Pkger/Repository.Repository.Repository;
 
 namespace Pkger{
     namespace Examples {
@@ -274,7 +276,7 @@ namespace Pkger{
         
         
 
-        pub def fakeregister(): Result[Map[String,List[PackageInfo]],String] = 
+        pub def fakeregister(): Result[Repository,String] = 
             let crawler = crawler();
             let bottleneckp = bottleneckp();
             let cheerio = cheerio();
@@ -294,7 +296,7 @@ namespace Pkger{
             let testMaxver = testMaxver();
             let maxver = maxver();
             let maxver2 = maxver2();
-            Ok(Map#{pinfogetname(crawler) -> crawler :: Nil,
+            Ok(Repository(Map#{pinfogetname(crawler) -> crawler :: Nil,
                     pinfogetname(css_what) -> css_what :: Nil,
                     pinfogetname(bottleneckp) -> bottleneckp :: Nil,
                     pinfogetname(cheerio) -> cheerio :: Nil,
@@ -310,7 +312,7 @@ namespace Pkger{
                     pinfogetname(conflictB) -> conflictB :: Nil,
                     pinfogetname(json_stringify_safe) -> json_stringify_safe :: Nil,
                     pinfogetname(testMaxver) -> testMaxver::Nil,
-                    pinfogetname(maxver) -> maxver2 :: maxver::Nil})
+                    pinfogetname(maxver) -> maxver2 :: maxver::Nil}))
         
 
     }

@@ -24,15 +24,18 @@ use Pkger/Author.Author.Author;
 use Pkger/Dependency.PackageDependency.PackageDependency;
 use Pkger/Dependency.{PackageDependency,getPackageName,getMaxVer,getMinVer};
 use Pkger/Examples.{entities2};
+use Pkger/Repository.Repository.Repository;
+use Pkger/Repository.Repository;
 
 namespace Pkger{
     namespace ResolveDep{
 
         //
         // check if the package exist in the registry, if it exist get it's dependencies and subdependencies. 
-        //
-        pub def getFullDependencies(registry: Map[String,List[PackageInfo]],pset: Set[PackageInfo],packagename: String): Result[Set[PackageInfo],String] & Impure= 
+        // Map[String,List[PackageInfo]]
+        pub def getFullDependencies(repo: Repository,pset: Set[PackageInfo],packagename: String): Result[Set[PackageInfo],String] & Impure= 
             use Result.flatMap;
+            let Repository(registry) = repo;
             let keys = Map.keysOf(registry);
             if (Set.memberOf(packagename,keys)) {
                 let value = Map.get(packagename,registry);
