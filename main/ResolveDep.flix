@@ -97,7 +97,12 @@ namespace Pkger{
             let* sortedlist = sortPackageInfo(packagelist);
             findNewestHelper(sortedlist,minversion,maxversion,SemVer(0,0,0),sortedlist)
         
+        //
+        //If maxver is not set, find the newest Major adapt version. Else find the newest version according to maxver.
+        //
         def findNewestHelper(sortedlist: List[PackageInfo],minver: SemVer, maxver: Option[SemVer],bestsofar: SemVer, originlist: List[PackageInfo]): Result[PackageInfo,String] & Impure= 
+        use Result.flatMap;
+        if (maxver == None){
             match sortedlist {
                 case x :: rest => 
                     if (isAdaptable(pinfogetversion(x),minver)) {
@@ -108,6 +113,21 @@ namespace Pkger{
                     }
                 case Nil => findPinfoByVersion(originlist,bestsofar)
             }
+        }
+        else {
+            let* realmaxver = Option.toOk(maxver,"Must set maxver");
+            match sortedlist {
+                case x :: rest => 
+                    if (lessEqual(realmaxver,pinfogetversion(x))) {
+                        findNewestHelper(rest,minver,maxver,pinfogetversion(x),originlist)
+                    }
+                    else {
+                        findNewestHelper(rest,minver,maxver,bestsofar,originlist)
+                    }
+                case Nil => findPinfoByVersion(originlist,bestsofar)
+            }
+        }
+            
 
         //
         // Give the Semver return packageinfo if the required version is in the registry

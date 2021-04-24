@@ -53,7 +53,6 @@ namespace Pkger{
         instance Order[PackageInfo] {
             pub def compare(xs: PackageInfo, ys: PackageInfo): Comparison = match (xs,ys){
                 case (PackageInfo(x),PackageInfo(y)) => (x.name,x.version,x.authors,x.edition,x.dependencies,x.url) <=> (y.name,y.version,y.authors,y.edition,y.dependencies,y.url) 
-                case _ => LessThan
             }
         }
 

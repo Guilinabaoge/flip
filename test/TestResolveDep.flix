@@ -26,7 +26,7 @@ use Pkger/Lex.{stringifySemver,stringifyAuthors,stringifyDependency,stringifyPac
 use Pkger/JSONParser.{parse,json2author,jstring2string,jstring2Semver,json2Dependency,json2PackageInfo};
 use Pkger/JSON.JSON.{JObject,JString,JArray};
 use Pkger/Examples.{fakeregister,bottleneckp,bottleneckp2,crawler,bottleneckp3,bottleneckp4,boolbase,css_what,entities,cheerio,cheerio_select,
-    css_select,request,caseless,extend,json_stringify_safe,entities2,testconflicts,conflictA,conflictB};
+    css_select,request,caseless,extend,json_stringify_safe,entities2,testconflicts,conflictA,conflictB,maxver,maxver2};
 use Pkger/ResolveDep.{getFullDependencies,sortPackageInfo};
 
 namespace Pkger/ResolveDep{
@@ -101,7 +101,29 @@ namespace Pkger/ResolveDep{
                 case Err(_) => Set#{}
             };
             let expectset = Set#{entities(),conflictA(),conflictB()};
-            set |> println;
+            //expectset |> println;
+            //Set.difference(expectset,set)|> println;
+            set == expectset
+            case Err(_) => false
+        }
+    
+    //
+    // testMaxver depend on package maxver with minver SemVer(2,2,2) and maxver SemVer(5,0,0). In the test registry there is (2,2,2) and (4,0,0) two versions of maxver,
+    // the solver should return version (4,0,0) as result
+    //
+    @test 
+    def testResolveDep06(): Bool & Impure=
+    use Result.flatMap;
+        match fakeregister(){
+            case Ok(x) => 
+            let set = match getFullDependencies(x,Set#{},"testMaxver") {
+                case Ok(i) => i
+                case Err(_) => Set#{}
+            };
+            let expectset = Set#{maxver2()};
+            //expectset |> println;
+            set |> println; 
+            //expectset |> println;
             set == expectset
             case Err(_) => false
         }

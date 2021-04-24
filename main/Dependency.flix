@@ -37,7 +37,6 @@ namespace Pkger{
         instance Order[PackageDependency] {
             pub def compare(xs: PackageDependency, ys: PackageDependency): Comparison = match (xs,ys){
                 case (PackageDependency(x),PackageDependency(y)) => (x.name,x.version,x.maxversion) <=> (y.name,y.version,y.maxversion) 
-                case _ => LessThan
             }
         }
 

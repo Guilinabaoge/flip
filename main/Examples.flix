@@ -227,6 +227,7 @@ namespace Pkger{
                 version = SemVer(1,0,0),
                 authors = Author({name = "zhiwei", email = None, website = Some("https://github.com/zhiwei")}) :: Nil,
                 edition = SemVer(0,14,6),   //TODO can two packageinfo with same name different version coexist in a Set?
+                //dependencies = PackageDependency({name = "extend", version = SemVer(3,0,2),maxversion = None})::Nil,
                 dependencies = PackageDependency({name = "entities", version = SemVer(2,4,1),maxversion = None})::Nil,
                 url = "https://github.com/isaacs/json-stringify-safe"
             })
@@ -238,6 +239,36 @@ namespace Pkger{
                 authors = Author({name = "zhiwei", email = None, website = Some("https://github.com/zhiwei")}) :: Nil,
                 edition = SemVer(0,14,6),
                 dependencies = PackageDependency({name = "entities", version = SemVer(2,2,2),maxversion = None})::Nil,
+                url = "https://github.com/isaacs/json-stringify-safe"
+            })
+        
+        pub def testMaxver(): PackageInfo = 
+            PackageInfo({
+                name = "testMaxver",
+                version = SemVer(1,0,0),
+                authors = Author({name = "zhiwei", email = None, website = Some("https://github.com/zhiwei")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = PackageDependency({name = "maxver", version = SemVer(2,2,2),maxversion = Some(SemVer(5,0,0))})::Nil,
+                url = "https://github.com/isaacs/json-stringify-safe"
+            })
+        
+        pub def maxver(): PackageInfo = 
+            PackageInfo({
+                name = "maxver",
+                version = SemVer(2,2,2),
+                authors = Author({name = "zhiwei", email = None, website = Some("https://github.com/zhiwei")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil,
+                url = "https://github.com/isaacs/json-stringify-safe"
+            })
+        
+        pub def maxver2(): PackageInfo = 
+            PackageInfo({
+                name = "maxver",
+                version = SemVer(4,0,0),
+                authors = Author({name = "zhiwei", email = None, website = Some("https://github.com/zhiwei")}) :: Nil,
+                edition = SemVer(0,14,6),
+                dependencies = Nil,
                 url = "https://github.com/isaacs/json-stringify-safe"
             })
         
@@ -260,6 +291,9 @@ namespace Pkger{
             let testconflicts = testconflicts();
             let conflictA = conflictA();
             let conflictB = conflictB();
+            let testMaxver = testMaxver();
+            let maxver = maxver();
+            let maxver2 = maxver2();
             Ok(Map#{pinfogetname(crawler) -> crawler :: Nil,
                     pinfogetname(css_what) -> css_what :: Nil,
                     pinfogetname(bottleneckp) -> bottleneckp :: Nil,
@@ -274,7 +308,9 @@ namespace Pkger{
                     pinfogetname(testconflicts) -> testconflicts :: Nil,
                     pinfogetname(conflictA) -> conflictA :: Nil,
                     pinfogetname(conflictB) -> conflictB :: Nil,
-                    pinfogetname(json_stringify_safe) -> json_stringify_safe :: Nil})
+                    pinfogetname(json_stringify_safe) -> json_stringify_safe :: Nil,
+                    pinfogetname(testMaxver) -> testMaxver::Nil,
+                    pinfogetname(maxver) -> maxver2 :: maxver::Nil})
         
 
     }
