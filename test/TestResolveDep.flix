@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2021 Zhiwei Zeng
  *
@@ -27,14 +28,15 @@ use Pkger/JSONParser.{parse,json2author,jstring2string,jstring2Semver,json2Depen
 use Pkger/JSON.JSON.{JObject,JString,JArray};
 use Pkger/Examples.{fakeregister,bottleneckp,bottleneckp2,crawler,bottleneckp3,bottleneckp4,boolbase,css_what,entities,cheerio,cheerio_select,
     css_select,request,caseless,extend,json_stringify_safe,entities2,testconflicts,conflictA,conflictB,maxver,maxver2};
-use Pkger/ResolveDep.{getFullDependencies,sortPackageInfo};
+use Pkger/ResolveDep.{solver,sortPackageInfo};
+
 
 namespace Pkger/ResolveDep{
     @test 
     def testResolveDep01(): Bool & Impure=
     use Result.flatMap;
         match fakeregister(){
-            case Ok(x) => match getFullDependencies(x,Set#{},"entities") {
+            case Ok(x) => match solver(x,Set#{},"entities") {
                 case Ok(i) => i == Set#{}
                 case Err(_) => false
             } 
@@ -46,7 +48,7 @@ namespace Pkger/ResolveDep{
     use Result.flatMap;
         match fakeregister(){
             case Ok(x) => 
-            let set = match getFullDependencies(x,Set#{},"css-select") {
+            let set = match solver(x,Set#{},"css-select") {
                 case Ok(i) => i
                 case Err(_) => Set#{}
             };
@@ -62,7 +64,7 @@ namespace Pkger/ResolveDep{
     use Result.flatMap;
         match fakeregister(){
             case Ok(x) => 
-            let set = match getFullDependencies(x,Set#{},"crawler") {
+            let set = match solver(x,Set#{},"crawler") {
                 case Ok(i) => i
                 case Err(_) => Set#{}
             };
@@ -73,16 +75,17 @@ namespace Pkger/ResolveDep{
             case Err(_) => false
         }
     
+    
     @test 
     def testResolveDep04(): Bool & Impure=
     use Result.flatMap;
         match fakeregister(){
             case Ok(x) => 
-            let set = match getFullDependencies(x,Set#{},"css-what") {
+            let set = match solver(x,Set#{},"css-what") {
                 case Ok(i) => i
                 case Err(_) => Set#{}
             };
-            let expectset = Set#{entities()};
+            let expectset = Set#{entities(),boolbase()};
             set == expectset
             case Err(_) => false
         }
@@ -96,7 +99,7 @@ namespace Pkger/ResolveDep{
     use Result.flatMap;
         match fakeregister(){
             case Ok(x) => 
-            let set = match getFullDependencies(x,Set#{},"testconflicts") {
+            let set = match solver(x,Set#{},"testconflicts") {
                 case Ok(i) => i
                 case Err(_) => Set#{}
             };
@@ -116,7 +119,7 @@ namespace Pkger/ResolveDep{
     use Result.flatMap;
         match fakeregister(){
             case Ok(x) => 
-            let set = match getFullDependencies(x,Set#{},"testMaxver") {
+            let set = match solver(x,Set#{},"testMaxver") {
                 case Ok(i) => i
                 case Err(_) => Set#{}
             };
@@ -169,6 +172,13 @@ namespace Pkger/ResolveDep{
             }
             case Err(_x) => false
         }
+    
+    @test 
+    def crawler(): Bool & Impure= 
+        let crawlerobject = crawler();
+        let crawlerstring = stringifyPackageInfo(crawlerobject);
+        crawlerstring |> println;
+        true
     
 }
   

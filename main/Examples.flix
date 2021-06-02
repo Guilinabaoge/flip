@@ -134,7 +134,8 @@ namespace Pkger{
                 authors = Author({name = "feedic", email = None, website = Some("https://github.com/fb55")})::
                           Nil,
                 edition = SemVer(0,14,6),
-                dependencies = PackageDependency({name = "entities", version = SemVer(2,2,1),maxversion = None}) :: Nil,
+                dependencies = PackageDependency({name = "entities", version = SemVer(2,2,1),maxversion = None}) ::
+                                PackageDependency({name = "boolbase", version = SemVer(1,0,0),maxversion = None}) :: Nil,
                 url = "https://github.com/fb55/css-what"
 
             })
@@ -318,5 +319,5 @@ namespace Pkger{
     }
 }
 
-
+//curl -L -o master.zip http://github.com/flix/flix/zipball/master/
 

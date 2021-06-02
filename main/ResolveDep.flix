@@ -33,7 +33,7 @@ namespace Pkger{
         //
         // check if the package exist in the registry, if it exist get it's dependencies and subdependencies. 
         // Map[String,List[PackageInfo]]
-        pub def getFullDependencies(repo: Repository,pset: Set[PackageInfo],packagename: String): Result[Set[PackageInfo],String] & Impure= 
+        pub def solver(repo: Repository,pset: Set[PackageInfo],packagename: String): Result[Set[PackageInfo],String] & Impure= 
             use Result.flatMap;
             let Repository(registry) = repo;
             let keys = Map.keysOf(registry);

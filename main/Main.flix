@@ -23,6 +23,10 @@ use GetOpt.{getOpt, usageInfo};
 use Core/Io/IOError.IOError;
 use Core/Io/File.File.File;
 use Pkger.{isValidProject,initPackage,uninstallPackage,mkPackage,makejar,packFlix,giveMeSources};
+use Pkger/ResolveDep.{solver};
+use Pkger/Examples.{fakeregister,bottleneckp,bottleneckp2,crawler,bottleneckp3,bottleneckp4,boolbase,css_what,entities,cheerio,cheerio_select,
+    css_select,request,caseless,extend,json_stringify_safe,entities2,testconflicts,conflictA,conflictB,maxver,maxver2};
+
 
 
 enum Flag {
@@ -73,6 +77,17 @@ def handleNonOption(x: List[String]): Result[Bool,String] & Impure =
                 case "pack" => let fileName = List.head(rest); packFlix(fileName);Ok(true)
                 case "new" => let fileName = List.head(rest); mkPackage(fileName);Ok(true)
                 case "uninstall" => let fileName = List.head(rest); uninstallPackage(fileName);Ok(true)
+                case "install" => let packagename = match List.head(rest){
+                                        case Some(x) => x
+                                        case None => "None"
+                                    }; 
+                                    match fakeregister(){
+                                        case Ok(x) => match solver(x,Set#{},packagename) {
+                                            case Ok(i) => i |> println; Ok(true)
+                                            case Err(_) => Ok(false)
+                                        } 
+                                        case Err(_) => Ok(false)
+                                       }
                 case "init" => initPackage();Ok(true)
                 case "checkvalid" => "Hi" |> println;isValidProject();Ok(true)
                 case "makejar" => makejar();Ok(true)
